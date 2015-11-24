@@ -1,0 +1,64 @@
+<project default="all">
+	<property name="tst-dir" location="src" />
+	<property name="TALK" value="true" />
+
+	<property name="src.dir" location="src" />
+	<property name="test.dir" location="test" />
+	<property name="junitlib.dir" location="junitlib" />
+	<property name="build.dir" location="build" />
+	<property name="libs.dir" location="libs" />
+	<property name="reports.tests" location="rep" />
+
+	<path id="classpath.base">
+		<fileset dir="${junitlib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${libs.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${build.dir}" />
+	</path>
+
+	<path id="classpath.test">
+		<path refid="classpath.base" />
+	</path>
+
+	<!-- Deletes the existing docs, build and dist directory -->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!-- Creates the docs, build and dist directory -->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<!-- Compiles the java code (including the usage of library for JUnit -->
+	<target name="compile" depends="clean, makedir">
+		<javac srcdir="${src.dir}" destdir="${build.dir}">
+			<classpath refid="classpath.base" />
+		</javac>
+		<javac srcdir="${test.dir}" destdir="${build.dir}">
+			<classpath refid="classpath.base" />
+		</javac>
+	</target>
+
+	<target name="all" depends="unit-test" />
+
+	<target name="unit-test" depends="compile">
+		<mkdir dir="${reports.tests}" />
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath refid="classpath.test" />
+			<formatter type="plain" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${reports.tests}">
+				<fileset dir="test">
+					<include name="**/*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+</project>
+
+
+

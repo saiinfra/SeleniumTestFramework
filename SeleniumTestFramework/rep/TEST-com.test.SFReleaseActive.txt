@@ -1,0 +1,4 @@
+Testsuite: com.test.SFReleaseActive
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 29.341 sec
+
+Testcase: testEee took 29.251 sec
