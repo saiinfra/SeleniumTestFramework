@@ -43,15 +43,22 @@
 		</javac>
 	</target>
 
-	<target name="all" depends="compile">
-		<property name="testId" value="" />
-		<echo> Running test class ${testId}......... </echo>
+	<target name="all" depends="unit-test" />
 
-		<java classname="com.test.TestRunner">
+	<target name="unit-test" depends="compile">
+		<mkdir dir="${reports.tests}" />
+		<junit printsummary="yes" haltonfailure="no">
 			<classpath refid="classpath.test" />
-			<arg value= "${testId}" />
-		</java>
+			<formatter type="plain" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${reports.tests}">
+				<fileset dir="test">
+					<include name="**/*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
-
 </project>
+
+
 
