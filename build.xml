@@ -44,12 +44,12 @@
 	</target>
 
 	<target name="all" depends="compile">
-		<property name="testId" value="" />
+		<property name="testparam" value="" />
 		<echo> Running test class ${testId}......... </echo>
 
 		<java classname="com.test.TestRunner">
 			<classpath refid="classpath.test" />
-			<arg value= "${testId}" />
+			<arg value= "${testparam}" />
 		</java>
 	</target>
 
