@@ -43,9 +43,9 @@
 		</javac>
 	</target>
 
-	<target name="all" depends="compile">
+	<target name="all1" depends="compile">
 		<property name="testparam" value="" />
-		<echo> Running test class ${testId}......... </echo>
+		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
 			<classpath refid="classpath.test" />
@@ -53,5 +53,18 @@
 		</java>
 	</target>
 
+	<target name="all" depends="compile">
+		<property name="testparam" value="" />
+		<echo> Running test class ${testparam}......... </echo>
+	    <junit printsummary="on">
+	    	<classpath refid="classpath.test" />
+	         <batchtest fork="yes" todir="${build.dir}">
+	            <!-- The fileset element specifies which tests to run. -->
+	            <!-- There are many different ways to specify filesets, this
+	                 is just one example. -->
+	            <fileset dir="${test.dir}" includes="**/${testparam}.java"/>
+	         </batchtest>
+	    </junit>
+	</target>
 </project>
 
