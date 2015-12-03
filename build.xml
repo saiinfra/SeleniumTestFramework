@@ -45,7 +45,7 @@
 
 	<target name="all1" depends="compile">
 		<property name="testparam" value="" />
-		<echo> Running test class ${testparam}......... </echo>
+		<echo> Running Testframework for testcase : ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
 			<classpath refid="classpath.test" />
