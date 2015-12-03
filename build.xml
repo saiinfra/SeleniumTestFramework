@@ -1,4 +1,4 @@
-<project default="all">
+<project default="all1">
 	<property name="tst-dir" location="src" />
 	<property name="TALK" value="true" />
 
