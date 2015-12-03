@@ -26,10 +26,7 @@ public class TestRunner {
 				userID = st.nextToken();
 				password = st.nextToken();
 				serverURL = st.nextToken();
-				testcasename = st.nextToken();
-				metadataLogId = st.nextToken();
-				userID = st.nextToken();
-				password = st.nextToken();
+				
 			}
 			// TestCasesMap map = new TestCasesMap();
 			TestCasesMap map = new TestCasesMap();
