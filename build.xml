@@ -1,4 +1,4 @@
-<project default="all">
+<project default="all1">
 	<property name="tst-dir" location="src" />
 	<property name="TALK" value="true" />
 
@@ -35,7 +35,8 @@
 
 	<!-- Compiles the java code (including the usage of library for JUnit -->
 	<target name="compile" depends="clean, makedir">
-		<javac srcdir="${src.dir}" destdir="${build.dir}">
+		<javac srcdir="${src.dir}
+			" destdir="${build.dir}">
 			<classpath refid="classpath.base" />
 		</javac>
 		<javac srcdir="${test.dir}" destdir="${build.dir}">
@@ -44,7 +45,7 @@
 	</target>
 
 	<target name="all1" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="SampleAddTest" />
 		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
@@ -54,7 +55,7 @@
 	</target>
 
 	<target name="all" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="SampleAddTest" />
 		<echo> Running test class ${testparam}......... </echo>
 	    <junit printsummary="on">
 	    	<classpath refid="classpath.test" />
