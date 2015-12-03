@@ -1,4 +1,4 @@
-package com.util.sql;
+package com.test;
 
 public class MetadataLogSQLStmts {
 
