@@ -6,12 +6,15 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-public class TestRunner {
 
+public class TestRunner {
+	
 	private static String testcasename;
 	private static String metadataLogId;
 	private static String userID;
 	private static String password;
+
+	
 	private static String serverURL;
 
 	public static void main(String[] args) {
@@ -25,6 +28,10 @@ public class TestRunner {
 				userID = st.nextToken();
 				password = st.nextToken();
 				serverURL = st.nextToken();
+				 testcasename = st.nextToken();
+				 metadataLogId=st.nextToken();
+				 userID=st.nextToken();
+				 password=st.nextToken();
 			}
 			// TestCasesMap map = new TestCasesMap();
 			TestCasesMap map = new TestCasesMap();
@@ -33,8 +40,10 @@ public class TestRunner {
 			
 			ErrorBean errorBean=new ErrorBean();
 
-			String value = (map.getMap()).get(testcasename);
 
+			String value = (map.getMap()).get(testcasename);
+			
+			
 			try {
 				if (value != null) {
 					Result result = JUnitCore.runClasses(Class.forName(value));
@@ -77,10 +86,9 @@ public class TestRunner {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		} else {
-			System.out.println(" cannot be blank: ");
-		}
+						
+		} 
 
+	}
 	}
 }
