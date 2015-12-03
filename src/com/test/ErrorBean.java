@@ -2,12 +2,12 @@ package com.test;
 
 public class ErrorBean {
 	
-	private String status;
+	private boolean status;
 	private String description;
-	public String getStatus() {
+	public boolean getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(boolean status) {
 		this.status = status;
 	}
 	public String getDescription() {

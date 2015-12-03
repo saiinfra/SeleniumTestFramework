@@ -26,7 +26,7 @@ public class TestRunner {
 				userID = st.nextToken();
 				password = st.nextToken();
 				serverURL = st.nextToken();
-				
+
 			}
 			// TestCasesMap map = new TestCasesMap();
 			TestCasesMap map = new TestCasesMap();
@@ -46,17 +46,20 @@ public class TestRunner {
 
 						throw (new Exception(failure.toString()));
 					}
-					errorBean.setStatus("sucess");
-					errorBean.setDescription("Test case :" + testcasename + ""
-							+ "sucessfully Processes");
+					errorBean.setDescription("Test case :" + testcasename + " "
+							+ "sucessfully Processed");
+					System.out.println("Test case :" + testcasename + " "
+							+ "sucessfully Processed");
+					errorBean.setStatus(result.wasSuccessful());
+
 					System.out.println(result.wasSuccessful());
 				} else {
 
-					throw (new Exception("Error"));
+					throw (new Exception("Test case not Found"));
 				}
 			} catch (Exception e) {
-				errorBean.setStatus("failure");
-				errorBean.setDescription("Test case failure" + e.getMessage());
+				errorBean.setStatus(false);
+				errorBean.setDescription("Test case failure" +" "+ e.getMessage());
 				System.out.println("Ready to record error: " + e.getMessage());
 			} finally {
 
