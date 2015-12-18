@@ -1,21 +1,26 @@
 package com.test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestCasesMap {
 
-	public HashMap<String, String> map= new HashMap<String, String>();
+	public HashMap<String, List<String>> map= new HashMap<String, List<String>>();
 	
 	public TestCasesMap(){
 		super();
-		map.put("SampleAddTest", "com.test.SampleAddTest");
-		map.put("TestJunit", "com.test.TestJunit");
-		map.put("SFReleaseActive", "com.test.SFReleaseActive");
-		map.put("SalesforceLoginJava", "com.test.SalesforceLoginJava");
-		map.put("SeleniumTest", "com.test.SeleniumTest");
+		List<String> list = new ArrayList<String>();
+		list.add("com.test.SeleniumCITest");
+		list.add("com.test.SeleniumTest");
+		map.put("SuccessTest", list);
+		list = new ArrayList<String>();
+		list.add("com.test.RackspaceContactAutomation");
+		list.add("com.test.SampleAddTest");
+		map.put("FailureTest", list);
 	}
 	
-	public HashMap<String, String> getMap(){
+	public HashMap<String, List<String>> getMap(){
 		return map;
 	}
 }

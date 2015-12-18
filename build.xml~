@@ -57,7 +57,7 @@
 	</target>
 
 	<target name="all" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="SampleAddTest" />
 		<echo> Running test class ${testparam}......... </echo>
 	    <junit printsummary="on">
 	    	<classpath refid="classpath.test" />
