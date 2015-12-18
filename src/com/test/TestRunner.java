@@ -13,6 +13,8 @@ import org.junit.runner.notification.Failure;
 
 public class TestRunner {
 
+	private static ResultInformationDO resultInformationDO = null;
+
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			System.out.println("Arg1: " + args[0]);
@@ -21,18 +23,25 @@ public class TestRunner {
 			Result result = null;
 			Path currentRelativePath = Paths.get("");
 			String path = currentRelativePath.toAbsolutePath().toString();
-			String filePath = path+"/reports";
+			String filePath = path + "/reports";
 			String reportFileName = "myReport";
 			List<String> list = (map.getMap()).get(args[0]);
-			int i=0;
+			int i = 0;
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				i++;
 				String testClass = (String) iterator.next();
 				try {
 					Class tClass = Class.forName(testClass);
 					result = JUnitCore.runClasses(tClass);
-					StringBuffer myContent = getResultContent(tClass.getName(), result, 1);
-					writeReportFile(filePath + "/" + reportFileName+i+".htm", myContent);
+					ResultInformationDO junitOutput=resultProcessing(tClass.getName(), result);
+				
+					
+					System.out.println(junitOutput.toString());
+
+					StringBuffer myContent = getResultContent(tClass.getName(),
+							result, 1);
+					writeReportFile(filePath + "/" + reportFileName + i
+							+ ".htm", myContent);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -44,18 +53,22 @@ public class TestRunner {
 
 	}
 
-	private static StringBuffer getResultContent(String fileName, Result result, int numberOfTestFiles) {
+	private static StringBuffer getResultContent(String fileName,
+			Result result, int numberOfTestFiles) {
 		int numberOfTest = result.getRunCount();
 		int numberOfTestFail = result.getFailureCount();
 		int numberOfTestIgnore = result.getIgnoreCount();
 
-		int numberOfTestSuccess = numberOfTest - numberOfTestFail - numberOfTestIgnore;
-		int successPercent = (numberOfTest != 0) ? numberOfTestSuccess * 100 / numberOfTest : 0;
+		int numberOfTestSuccess = numberOfTest - numberOfTestFail
+				- numberOfTestIgnore;
+		int successPercent = (numberOfTest != 0) ? numberOfTestSuccess * 100
+				/ numberOfTest : 0;
 		double time = result.getRunTime();
 		StringBuffer myContent = new StringBuffer(
 				"<h1>Junit Report</h1><h2>Result</h2><table border=\"1\"><tr><th>File Name</th><th>Test Files</th><th>Tests</th><th>Success</th>");
 		if ((numberOfTestFail > 0) || (numberOfTestIgnore > 0)) {
-			myContent.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
+			myContent
+					.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
 		} else if ((numberOfTestFail <= 0) || (numberOfTestIgnore <= 0)) {
 
 		}
@@ -89,7 +102,8 @@ public class TestRunner {
 		return myContent;
 	}
 
-	private static void writeReportFile(String fileName, StringBuffer reportContent) {
+	private static void writeReportFile(String fileName,
+			StringBuffer reportContent) {
 		FileWriter myFileWriter = null;
 		try {
 			myFileWriter = new FileWriter(fileName);
@@ -105,5 +119,32 @@ public class TestRunner {
 				}
 			}
 		}
+	}
+
+	private static ResultInformationDO  resultProcessing(String testcasename, Result result) {
+		int numberOfTest = result.getRunCount();
+		int numberOfTestFail = result.getFailureCount();
+		int numberOfTestIgnore = result.getIgnoreCount();
+		double time = result.getRunTime();
+		resultInformationDO = new ResultInformationDO();
+		if (numberOfTestFail > 0) {
+
+			for (Failure failure : result.getFailures()) {
+				resultInformationDO.setType(failure.toString());
+				System.out.println(failure.toString());
+			}
+			resultInformationDO.setStatus("failure");
+			resultInformationDO.setTestcasename(testcasename);
+			resultInformationDO.setTime(Double.valueOf(time / 1000.0D));
+		} else {
+
+			resultInformationDO.setStatus("success");
+			resultInformationDO.setTestcasename(testcasename);
+			resultInformationDO.setTime(Double.valueOf(time / 1000.0D));
+			
+		}
+		
+		return resultInformationDO;
+
 	}
 }
