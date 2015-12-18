@@ -7,7 +7,7 @@
 	<property name="junitlib.dir" location="junitlib" />
 	<property name="build.dir" location="build" />
 	<property name="libs.dir" location="libs" />
-	<property name="reports.tests" location="rep" />
+	<property name="reports.tests" location="reports" />
 
 	<path id="classpath.base">
 		<fileset dir="${junitlib.dir}">
@@ -26,11 +26,13 @@
 	<!-- Deletes the existing docs, build and dist directory -->
 	<target name="clean">
 		<delete dir="${build.dir}" />
+		<delete dir="${reports.tests}" />
 	</target>
 
 	<!-- Creates the docs, build and dist directory -->
 	<target name="makedir">
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${reports.tests}" />
 	</target>
 
 	<!-- Compiles the java code (including the usage of library for JUnit -->
