@@ -23,7 +23,11 @@ public class TestScriptsResultsDAO {
 
 	public boolean insert(Object obj, SFoAuthHandle sfHandle) {
 		// create the records
+		
+	
+		
 		ResultInformationDO resultInformationDO = (ResultInformationDO) obj;
+		
 
 		Test_Script_Result__c[] record = new Test_Script_Result__c[1];
 
@@ -32,6 +36,10 @@ public class TestScriptsResultsDAO {
 		a.setStatus__c(resultInformationDO.getStatus());
 		a.setActual_Result__c(resultInformationDO.getType());
 		a.setTimes_s__c(resultInformationDO.getTime());
+		a.setTest_Information__c(Constants.TestInformationID);
+		a.setTest_Script__c(Constants.TestScript);
+		//a.setTest_Steps__c(resultInformationDO.getTestcasename());
+		//a.setStep__c(1.0);
 
 		record[0] = a;
 		commit(record, sfHandle);
@@ -57,7 +65,7 @@ public class TestScriptsResultsDAO {
 				}
 			}
 			System.out
-					.println("saving deploymentSettingsDAO from CustomAuth :");
+					.println("saving TestResults :");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

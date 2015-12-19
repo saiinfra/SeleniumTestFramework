@@ -15,10 +15,14 @@ public class TestMetadataLogDO {
 	private String status;
 	private String idC;
 	private String message;
+	private String testinformation;
 
+	public TestMetadataLogDO() {
+		// TODO Auto-generated constructor stub
+	}
 	public TestMetadataLogDO(String id, String logName, String name,
 			String script, String action, String status, String idC,
-			String message) {
+			String message,String testinformation) {
 		this.id = id;
 		this.logName = logName;
 		this.name = name;
@@ -27,8 +31,15 @@ public class TestMetadataLogDO {
 		this.status = status;
 		this.idC = idC;
 		this.message = message;
+		this.testinformation=testinformation;
 	}
 
+	public String getTestinformation() {
+		return testinformation;
+	}
+	public void setTestinformation(String testinformation) {
+		this.testinformation = testinformation;
+	}
 	public String getName() {
 		return name;
 	}

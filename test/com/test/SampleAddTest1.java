@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SampleAddTest {
+public class SampleAddTest1 {
 	private SampleAdd sampleClass;
 
 	@Before

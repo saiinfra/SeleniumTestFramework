@@ -14,6 +14,9 @@ import org.junit.runner.notification.Failure;
 public class TestRunner {
 
 	private static ResultInformationDO resultInformationDO = null;
+	private static TestMetadataLogDO metadataLogDO = null;
+
+	private static SFoAuthHandle sfHandle = null;
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
@@ -33,15 +36,31 @@ public class TestRunner {
 				try {
 					Class tClass = Class.forName(testClass);
 					result = JUnitCore.runClasses(tClass);
-					ResultInformationDO junitOutput=resultProcessing(tClass.getName(), result);
-				
-					
+
+					// find TestInfomation
+
+					ResultInformationDO junitOutput = resultProcessing(tClass.getName(), result);
+
+					sfHandle = new SFoAuthHandle(Constants.USERID, Constants.PASSWORD, Constants.INSTANCE_URL, "");
+					TestScriptsResultsDAO testScriptsResultsDAO = new TestScriptsResultsDAO();
+
+					List<Object> testInformationlist = findTestInformation(Constants.TestInformationID, sfHandle);
+					System.out.println("Size is " + testInformationlist.size());
+					if (testInformationlist.size() > 0) {
+						// updating testscript results
+						testScriptsResultsDAO.insert(junitOutput, sfHandle);
+						TestMetadataLogDO testMetadataLogDO = createTestMetadataLog(tClass.getName(), result);
+
+						// Creating MetadataLog with Summary Details
+						TestMetadataLogDAO testMetadataLogDAO = new TestMetadataLogDAO();
+						testMetadataLogDAO.insert(testMetadataLogDO, sfHandle);
+
+					}
+
 					System.out.println(junitOutput.toString());
 
-					StringBuffer myContent = getResultContent(tClass.getName(),
-							result, 1);
-					writeReportFile(filePath + "/" + reportFileName + i
-							+ ".htm", myContent);
+					StringBuffer myContent = getResultContent(tClass.getName(), result, 1);
+					writeReportFile(filePath + "/" + reportFileName + i + ".htm", myContent);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -53,22 +72,18 @@ public class TestRunner {
 
 	}
 
-	private static StringBuffer getResultContent(String fileName,
-			Result result, int numberOfTestFiles) {
+	private static StringBuffer getResultContent(String fileName, Result result, int numberOfTestFiles) {
 		int numberOfTest = result.getRunCount();
 		int numberOfTestFail = result.getFailureCount();
 		int numberOfTestIgnore = result.getIgnoreCount();
 
-		int numberOfTestSuccess = numberOfTest - numberOfTestFail
-				- numberOfTestIgnore;
-		int successPercent = (numberOfTest != 0) ? numberOfTestSuccess * 100
-				/ numberOfTest : 0;
+		int numberOfTestSuccess = numberOfTest - numberOfTestFail - numberOfTestIgnore;
+		int successPercent = (numberOfTest != 0) ? numberOfTestSuccess * 100 / numberOfTest : 0;
 		double time = result.getRunTime();
 		StringBuffer myContent = new StringBuffer(
 				"<h1>Junit Report</h1><h2>Result</h2><table border=\"1\"><tr><th>File Name</th><th>Test Files</th><th>Tests</th><th>Success</th>");
 		if ((numberOfTestFail > 0) || (numberOfTestIgnore > 0)) {
-			myContent
-					.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
+			myContent.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
 		} else if ((numberOfTestFail <= 0) || (numberOfTestIgnore <= 0)) {
 
 		}
@@ -102,8 +117,7 @@ public class TestRunner {
 		return myContent;
 	}
 
-	private static void writeReportFile(String fileName,
-			StringBuffer reportContent) {
+	private static void writeReportFile(String fileName, StringBuffer reportContent) {
 		FileWriter myFileWriter = null;
 		try {
 			myFileWriter = new FileWriter(fileName);
@@ -121,7 +135,7 @@ public class TestRunner {
 		}
 	}
 
-	private static ResultInformationDO  resultProcessing(String testcasename, Result result) {
+	private static ResultInformationDO resultProcessing(String testcasename, Result result) {
 		int numberOfTest = result.getRunCount();
 		int numberOfTestFail = result.getFailureCount();
 		int numberOfTestIgnore = result.getIgnoreCount();
@@ -141,10 +155,42 @@ public class TestRunner {
 			resultInformationDO.setStatus("success");
 			resultInformationDO.setTestcasename(testcasename);
 			resultInformationDO.setTime(Double.valueOf(time / 1000.0D));
-			
+
 		}
-		
+
 		return resultInformationDO;
 
+	}
+
+	private static TestMetadataLogDO createTestMetadataLog(String testcasename, Result result) {
+		int numberOfTest = result.getRunCount();
+		int numberOfTestFail = result.getFailureCount();
+		int numberOfTestIgnore = result.getIgnoreCount();
+		double time = result.getRunTime();
+		metadataLogDO = new TestMetadataLogDO();
+		if (numberOfTestFail > 0) {
+
+			for (Failure failure : result.getFailures()) {
+				metadataLogDO.setMessage(failure.toString());
+				System.out.println(failure.toString());
+			}
+
+		} else {
+
+			metadataLogDO.setMessage("Test Case Successfully Executed");
+
+		}
+		metadataLogDO.setStatus(Constants.COMPLETED_STATUS);
+		metadataLogDO.setTestinformation(Constants.TestInformationID);
+		metadataLogDO.setName(testcasename);
+		return metadataLogDO;
+
+	}
+
+	private static List<Object> findTestInformation(String testinformationid, SFoAuthHandle sfHandle) {
+
+		TestInformationDAO testInformationDAO = new TestInformationDAO();
+		List<Object> list = testInformationDAO.findById(testinformationid, sfHandle);
+		return list;
 	}
 }

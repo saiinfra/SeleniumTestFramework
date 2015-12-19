@@ -10,7 +10,10 @@ import java.util.Map.Entry;
 import com.sforce.soap.enterprise.EnterpriseConnection;
 import com.sforce.soap.enterprise.QueryResult;
 import com.sforce.soap.enterprise.SaveResult;
+import com.sforce.soap.enterprise.UpsertResult;
+import com.sforce.soap.enterprise.sobject.MetadataLog__c;
 import com.sforce.soap.enterprise.sobject.SObject;
+import com.sforce.soap.enterprise.sobject.Test_Script_Result__c;
 
 /**
  * 
@@ -22,6 +25,49 @@ public class TestMetadataLogDAO  {
 
 	public TestMetadataLogDAO() {
 		super();
+	}
+	public boolean insert(Object obj, SFoAuthHandle sfHandle) {
+		// create the records
+		TestMetadataLogDO testMetadataLogDO = (TestMetadataLogDO) obj;
+
+		MetadataLog__c[] record = new MetadataLog__c[1];
+
+		// Get the name of the sObject
+		MetadataLog__c a = new MetadataLog__c();
+		
+		a.setMessage__c(testMetadataLogDO.getMessage());
+		a.setStatus__c(testMetadataLogDO.getStatus());
+		a.setTest_Information__c(Constants.TestInformationID);
+		a.setName__c(testMetadataLogDO.getName());
+
+		record[0] = a;
+		commit(record, sfHandle);
+
+		return true;
+	}
+	public boolean commit(SObject[] sobjects, SFoAuthHandle sfHandle) {
+		try {
+			com.sforce.soap.enterprise.UpsertResult[] saveResults = sfHandle
+					.getEnterpriseConnection().upsert("Id", sobjects);
+
+			for (UpsertResult r : saveResults) {
+				if (r.isSuccess()) {
+					System.out.println("Created TestMetadata  record - Id: "
+							+ r.getId());
+				} else {
+					for (com.sforce.soap.enterprise.Error e : r.getErrors()) {
+						throw new Exception(e.getMessage() + "-status code-"
+								+ e.getStatusCode());
+					}
+					return false;
+				}
+			}
+			System.out
+					.println("saving TestResults :");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 
@@ -83,7 +129,7 @@ public class TestMetadataLogDAO  {
 							metadataLog__c.getScript__c(),
 							metadataLog__c.getAction__c(),
 							metadataLog__c.getStatus__c(),
-							metadataLog__c.getID__c(),"");
+							metadataLog__c.getID__c(),"","");
 
 					System.out.println(" - Action: "
 							+ metadataLog__c.getAction__c());
