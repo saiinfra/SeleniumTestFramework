@@ -6,21 +6,45 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import com.salesforce.domain.ResultInformationDO;
+import com.salesforce.domain.TestMetadataLogDO;
+import com.salesforce.ds.TestInformationDAO;
+import com.salesforce.ds.TestMetadataLogDAO;
+import com.salesforce.ds.TestScriptsResultsDAO;
+import com.util.Constants;
+import com.util.SFoAuthHandle;
+
 public class TestRunner {
 
 	private static ResultInformationDO resultInformationDO = null;
 	private static TestMetadataLogDO metadataLogDO = null;
+	private static String testsuitename;
+	private static String testInformationId;
 
 	private static SFoAuthHandle sfHandle = null;
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			System.out.println("Arg1: " + args[0]);
+
+			/*StringTokenizer st = new StringTokenizer(args[0], "~");
+
+			if (st.hasMoreTokens()) {
+				String testsuitename = st.nextToken();
+
+				setTestsuitename(testsuitename);
+
+				String testInformationId = st.nextToken();
+
+				setTestInformationId(testInformationId);
+			}*/
+
 			// TestCasesMap map = new TestCasesMap();
 			TestCasesMap map = new TestCasesMap();
 			Result result = null;
@@ -193,4 +217,21 @@ public class TestRunner {
 		List<Object> list = testInformationDAO.findById(testinformationid, sfHandle);
 		return list;
 	}
+
+	public static String getTestsuitename() {
+		return testsuitename;
+	}
+
+	public static void setTestsuitename(String testsuitename) {
+		TestRunner.testsuitename = testsuitename;
+	}
+
+	public static String getTestInformationId() {
+		return testInformationId;
+	}
+
+	public static void setTestInformationId(String testInformationId) {
+		TestRunner.testInformationId = testInformationId;
+	}
+
 }

@@ -1,10 +1,13 @@
-package com.test;
+package com.salesforce.ds;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesforce.domain.TestInformationDO;
 import com.sforce.soap.enterprise.EnterpriseConnection;
 import com.sforce.soap.enterprise.QueryResult;
+import com.util.SFoAuthHandle;
+import com.util.TestInformationSQLStmts;
 
 public class TestInformationDAO {
 

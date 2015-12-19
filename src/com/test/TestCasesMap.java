@@ -7,6 +7,7 @@ import java.util.List;
 public class TestCasesMap {
 
 	public HashMap<String, List<String>> map= new HashMap<String, List<String>>();
+
 	
 	public TestCasesMap(){
 		super();
@@ -27,4 +28,5 @@ public class TestCasesMap {
 	public HashMap<String, List<String>> getMap(){
 		return map;
 	}
+
 }

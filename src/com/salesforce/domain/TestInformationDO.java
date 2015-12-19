@@ -1,4 +1,4 @@
-package com.test;
+package com.salesforce.domain;
 
 public class TestInformationDO {
 
