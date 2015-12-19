@@ -33,7 +33,7 @@ public class TestRunner {
 		if (args.length > 0) {
 			System.out.println("Arg1: " + args[0]);
 
-			/*StringTokenizer st = new StringTokenizer(args[0], "~");
+			StringTokenizer st = new StringTokenizer(args[0], "~");
 
 			if (st.hasMoreTokens()) {
 				String testsuitename = st.nextToken();
@@ -43,7 +43,7 @@ public class TestRunner {
 				String testInformationId = st.nextToken();
 
 				setTestInformationId(testInformationId);
-			}*/
+			}
 
 			// TestCasesMap map = new TestCasesMap();
 			TestCasesMap map = new TestCasesMap();
@@ -52,7 +52,7 @@ public class TestRunner {
 			String path = currentRelativePath.toAbsolutePath().toString();
 			String filePath = path + "/reports";
 			String reportFileName = "myReport";
-			List<String> list = (map.getMap()).get(args[0]);
+			List<String> list = (map.getMap()).get(getTestsuitename());
 			int i = 0;
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				i++;
