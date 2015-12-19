@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -26,6 +27,12 @@ public class TestRunner {
 	private static TestMetadataLogDO metadataLogDO = null;
 	private static String testsuitename;
 	private static String testInformationId;
+	private static ArrayList l=new ArrayList<>();
+	private static ArrayList l1=new ArrayList<>();
+
+	private static int sum=0;
+
+	private static int sum1=0;
 
 	private static SFoAuthHandle sfHandle = null;
 
@@ -73,23 +80,44 @@ public class TestRunner {
 					if (testInformationlist.size() > 0) {
 						// updating testscript results
 						testScriptsResultsDAO.insert(junitOutput, sfHandle);
-						TestMetadataLogDO testMetadataLogDO = createTestMetadataLog(tClass.getName(), result);
-
-						// Creating MetadataLog with Summary Details
-						TestMetadataLogDAO testMetadataLogDAO = new TestMetadataLogDAO();
-						testMetadataLogDAO.insert(testMetadataLogDO, sfHandle);
+					
 
 					}
 
 					System.out.println(junitOutput.toString());
 
 					StringBuffer myContent = getResultContent(tClass.getName(), result, 1);
+					
+					
+					System.out.println(myContent.toString());
 					writeReportFile(filePath + "/" + reportFileName + i + ".htm", myContent);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			for (Iterator iterator = l.iterator(); iterator.hasNext();) {
+				Integer string = (Integer) iterator.next();
+				sum=sum+string;
+				
+				
+			}
+			for (Iterator iterator = l1.iterator(); iterator.hasNext();) {
+				Integer string = (Integer) iterator.next();
+				sum1=sum1+string;
+				
+				
+			}
+			System.out.println("No of Test Fails :"+sum);
+			System.out.println("No of Test  :"+sum1);
+			int sucess=sum1-sum;
+			System.out.println("No of Test success :"+sucess);
+
+			TestMetadataLogDO testMetadataLogDO = createTestMetadataLog(sum,sum1,sucess);
+
+			// Creating MetadataLog with Summary Details
+			TestMetadataLogDAO testMetadataLogDAO = new TestMetadataLogDAO();
+			testMetadataLogDAO.insert(testMetadataLogDO, sfHandle);
 		} else {
 			System.out.println(" cannot be blank: ");
 		}
@@ -105,9 +133,9 @@ public class TestRunner {
 		int successPercent = (numberOfTest != 0) ? numberOfTestSuccess * 100 / numberOfTest : 0;
 		double time = result.getRunTime();
 		StringBuffer myContent = new StringBuffer(
-				"<h1>Junit Report</h1><h2>Result</h2><table border=\"1\"><tr><th>File Name</th><th>Test Files</th><th>Tests</th><th>Success</th>");
+				"<h1>Junit Report</h1><h2>Result</h2><table border=\"1\"><tr><th>File Name</th><th>Test Files</th><th>Tests</th><th>Success</th><th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
 		if ((numberOfTestFail > 0) || (numberOfTestIgnore > 0)) {
-			myContent.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
+			//myContent.append("<th>Failure</th><th>Failure_Details</th><th>Ignore</th>");
 		} else if ((numberOfTestFail <= 0) || (numberOfTestIgnore <= 0)) {
 
 		}
@@ -181,32 +209,19 @@ public class TestRunner {
 			resultInformationDO.setTime(Double.valueOf(time / 1000.0D));
 
 		}
-
+		l.add(numberOfTestFail);
+        l1.add(numberOfTest);
 		return resultInformationDO;
 
 	}
 
-	private static TestMetadataLogDO createTestMetadataLog(String testcasename, Result result) {
-		int numberOfTest = result.getRunCount();
-		int numberOfTestFail = result.getFailureCount();
-		int numberOfTestIgnore = result.getIgnoreCount();
-		double time = result.getRunTime();
+	private static TestMetadataLogDO createTestMetadataLog(int fails,int tests,int sucess) {
+	
 		metadataLogDO = new TestMetadataLogDO();
-		if (numberOfTestFail > 0) {
 
-			for (Failure failure : result.getFailures()) {
-				metadataLogDO.setMessage(failure.toString());
-				System.out.println(failure.toString());
-			}
-
-		} else {
-
-			metadataLogDO.setMessage("Test Case Successfully Executed");
-
-		}
 		metadataLogDO.setStatus(Constants.COMPLETED_STATUS);
 		metadataLogDO.setTestinformation(Constants.TestInformationID);
-		metadataLogDO.setName(testcasename);
+		
 		return metadataLogDO;
 
 	}

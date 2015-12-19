@@ -41,6 +41,26 @@ public class RackspaceContactAutomation {
         String actual = actualHeadLine.getText();
         assertTrue(actual.contains(expected));
     }
+    
+    @Test
+    public void testSearchExportedFromIDE1() throws Exception {
+        String baseUrl = "http://www.yr.no";
+        driver.get(baseUrl + "/");
+
+        WebElement searchField = driver.findElement(By.id("stedsearchField.clear()"));
+        searchField.sendKeys("Stockholm");
+        searchField.submit();
+
+        String topLinkXPathExpression = "//div[@id='directories']/table/tbody/tr/td[2]/a";
+        WebElement topSearchResult = driver.findElement(By.xpath(topLinkXPathExpression));
+        topSearchResult.click();
+
+        driver.findElement(By.cssSelector("li")).click();
+        String expected = "Stockholm";
+        WebElement actualHeadLine = driver.findElement(By.cssSelector("h1"));
+        String actual = actualHeadLine.getText();
+        assertTrue(actual.contains(expected));
+    }
     @After
 	public void teardown() {
 		driver.quit();

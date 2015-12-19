@@ -39,10 +39,10 @@ public class TestMetadataLogDAO  {
 		// Get the name of the sObject
 		MetadataLog__c a = new MetadataLog__c();
 		
-		a.setMessage__c(testMetadataLogDO.getMessage());
+		//a.setMessage__c(testMetadataLogDO.getMessage());
 		a.setStatus__c(testMetadataLogDO.getStatus());
 		a.setTest_Information__c(Constants.TestInformationID);
-		a.setName__c(testMetadataLogDO.getName());
+		//a.setName__c(testMetadataLogDO.getName());
 
 		record[0] = a;
 		commit(record, sfHandle);
