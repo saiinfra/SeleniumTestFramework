@@ -47,7 +47,7 @@
 	</target>
 
 	<target name="all1" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="FailureTest~a0361000005ZnOy" />
 		<echo> Running test class ${testparam}......... </echo>
 		<property name="testparam" value="" />
 		<echo> Running Testframework for testcase : ${testparam}......... </echo>
