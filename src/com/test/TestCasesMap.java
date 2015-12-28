@@ -17,9 +17,9 @@ public class TestCasesMap {
 		map.put("SuccessTest", list);
 		list = new ArrayList<String>();
 	//	list.add("com.test.RackspaceContactAutomation");
-		list.add("com.test.SeleniumCITest");
+		//list.add("com.test.SeleniumCITest");
 		list.add("com.test.SampleAddTest");
-		list.add("com.test.SeleniumTest");
+		//list.add("com.test.SeleniumTest");
 		//list.add("com.test.SalesforceTest");
 
 		map.put("FailureTest", list);
