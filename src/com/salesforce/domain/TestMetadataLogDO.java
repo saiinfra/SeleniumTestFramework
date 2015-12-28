@@ -8,38 +8,41 @@ package com.salesforce.domain;
 public class TestMetadataLogDO {
 
 	private String id;
-	private String logName;
 	private String name;
-	private String script;
-	private String action;
 	private String status;
-	private String idC;
 	private String message;
 	private String testinformation;
+	private Double totalTests;
+	private Double totalSuccess;
+	private Double totalFailures;
+	private Double totalTimes;
 
 	public TestMetadataLogDO() {
 		// TODO Auto-generated constructor stub
 	}
-	public TestMetadataLogDO(String id, String logName, String name,
-			String script, String action, String status, String idC,
-			String message,String testinformation) {
+
+	public TestMetadataLogDO(String id, String name, String status,
+			String message, String testinformation, Double totalTests,
+			Double totalSuccess, Double totalFailures ,Double totalTimes) {
 		this.id = id;
-		this.logName = logName;
 		this.name = name;
-		this.script = script;
-		this.action = action;
 		this.status = status;
-		this.idC = idC;
 		this.message = message;
-		this.testinformation=testinformation;
+		this.testinformation = testinformation;
+		this.totalTests = totalTests;
+		this.totalSuccess = totalSuccess;
+		this.totalFailures = totalFailures;
+		this.totalTimes=this.totalTimes;
 	}
 
 	public String getTestinformation() {
 		return testinformation;
 	}
+
 	public void setTestinformation(String testinformation) {
 		this.testinformation = testinformation;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -48,44 +51,12 @@ public class TestMetadataLogDO {
 		this.name = name;
 	}
 
-	public String getScript() {
-		return script;
-	}
-
-	public void setScript(String script) {
-		this.script = script;
-	}
-
-	public String getIdC() {
-		return idC;
-	}
-
-	public void setIdC(String idC) {
-		this.idC = idC;
-	}
-
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getLogName() {
-		return logName;
-	}
-
-	public void setLogName(String logName) {
-		this.logName = logName;
-	}
-
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
 	}
 
 	public String getStatus() {
@@ -103,5 +74,41 @@ public class TestMetadataLogDO {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+
+	public Double getTotalTests() {
+		return totalTests;
+	}
+
+	public void setTotalTests(Double totalTests) {
+		this.totalTests = totalTests;
+	}
+
+	public Double getTotalSuccess() {
+		return totalSuccess;
+	}
+
+	public void setTotalSuccess(Double totalSuccess) {
+		this.totalSuccess = totalSuccess;
+	}
+
+	public Double getTotalFailures() {
+		return totalFailures;
+	}
+
+	public void setTotalFailures(Double totalFailures) {
+		this.totalFailures = totalFailures;
+	}
+
+	public Double getTotalTimes() {
+		return totalTimes;
+	}
+
+	public void setTotalTimes(Double totalTimes) {
+		this.totalTimes = totalTimes;
+	}
+
+	
+
 
 }

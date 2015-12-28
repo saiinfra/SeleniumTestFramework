@@ -29,15 +29,7 @@ public class SeleniumCITest {
         driver.findElement(By.cssSelector("input[value='Log In']")).click();
         driver.findElement(By.linkText("Log Out")).click();
     }
-    @Test
-    public void successfulLoginLogout1() {
-         
-        driver.get("http://parabank.parasoft.com");
-        driver.findElement(By.name("username")).sendKeys("john");
-        driver.findElement(By.name("password")).sendKeys("demo");
-        driver.findElement(By.cssSelector("input[value='Log In']")).click();
-        driver.findElement(By.linkText("Log Out")).click();
-    }
+   
      
     @After
     public void teardown() {

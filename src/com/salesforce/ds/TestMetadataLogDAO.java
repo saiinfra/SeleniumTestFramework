@@ -25,11 +25,12 @@ import com.util.SFoAuthHandle;
  *         {@link MetadataLog__c}
  *
  */
-public class TestMetadataLogDAO  {
+public class TestMetadataLogDAO {
 
 	public TestMetadataLogDAO() {
 		super();
 	}
+
 	public boolean insert(Object obj, SFoAuthHandle sfHandle) {
 		// create the records
 		TestMetadataLogDO testMetadataLogDO = (TestMetadataLogDO) obj;
@@ -38,17 +39,21 @@ public class TestMetadataLogDAO  {
 
 		// Get the name of the sObject
 		MetadataLog__c a = new MetadataLog__c();
-		
-		//a.setMessage__c(testMetadataLogDO.getMessage());
+
+		// a.setMessage__c(testMetadataLogDO.getMessage());
 		a.setStatus__c(testMetadataLogDO.getStatus());
 		a.setTest_Information__c(Constants.TestInformationID);
-		//a.setName__c(testMetadataLogDO.getName());
+		a.setTests__c(testMetadataLogDO.getTotalTests());
+		a.setFailures__c(testMetadataLogDO.getTotalFailures());
+		a.setTimes_s__c(testMetadataLogDO.getTotalTimes());
+		// a.setName__c(testMetadataLogDO.getName());
 
 		record[0] = a;
 		commit(record, sfHandle);
 
 		return true;
 	}
+
 	public boolean commit(SObject[] sobjects, SFoAuthHandle sfHandle) {
 		try {
 			com.sforce.soap.enterprise.UpsertResult[] saveResults = sfHandle
@@ -66,14 +71,12 @@ public class TestMetadataLogDAO  {
 					return false;
 				}
 			}
-			System.out
-					.println("saving TestResults :");
+			System.out.println("saving TestResults :");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return true;
 	}
-
 
 	public boolean update(Object obj, SFoAuthHandle sfHandle) {
 		try {
@@ -88,7 +91,7 @@ public class TestMetadataLogDAO  {
 				metadataLog__c.setId(metadataLogDOobj.getId());
 				metadataLog__c.setStatus__c(metadataLogDOobj.getStatus());
 				metadataLog__c.setMessage__c(metadataLogDOobj.getMessage());
-				
+
 			}
 
 			SaveResult[] saveResults = sfHandle
@@ -127,13 +130,15 @@ public class TestMetadataLogDAO  {
 					metadataLog__c = (com.sforce.soap.enterprise.sobject.MetadataLog__c) queryResults
 							.getRecords()[i];
 
-					testMetadataLogDO = new TestMetadataLogDO(
-							metadataLog__c.getId(), metadataLog__c.getName(),
+				/*	testMetadataLogDO = new TestMetadataLogDO(
+							metadataLog__c.getId(),
 							metadataLog__c.getName__c(),
-							metadataLog__c.getScript__c(),
-							metadataLog__c.getAction__c(),
 							metadataLog__c.getStatus__c(),
-							metadataLog__c.getID__c(),"","");
+							metadataLog__c.getMessage__c(),
+							metadataLog__c.getTest_Information__c(),
+							metadataLog__c.getTests__c(),0.0,
+							metadataLog__c.getFailures__c(),
+							metadataLog__c.getTimes_s__c());*/
 
 					System.out.println(" - Action: "
 							+ metadataLog__c.getAction__c());
@@ -153,7 +158,4 @@ public class TestMetadataLogDAO  {
 		}
 		return list;
 	}
-
-	
-
 }
