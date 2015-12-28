@@ -8,6 +8,7 @@
 	<property name="build.dir" location="build" />
 	<property name="libs.dir" location="libs" />
 	<property name="reports.tests" location="rep" />
+	
 
 	<path id="classpath.base">
 		<fileset dir="${junitlib.dir}">
@@ -49,7 +50,8 @@
 		<echo> Running test class ${testparam}......... </echo>
 		<property name="testparam" value="" />
 		<echo> Running Testframework for testcase : ${testparam}......... </echo>
-
+ <echo message="Jenkins workspace: ${env.WORKSPACE}"/>
+    <echo message="Job directory: ${env.WORKSPACE}../../jobs/${env.JOB_NAME}"/>
 		<java classname="com.test.TestRunner">
 			<classpath refid="classpath.test" />
 			<arg value= "${testparam}" />
