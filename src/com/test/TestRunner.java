@@ -42,9 +42,9 @@ public class TestRunner {
 	}
 
 	public static void main(String[] args) {
-		// String arg = args[0];
+		 String arg = args[0];
 		// testId~OrgId~TestInfoName
-		String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
+		//String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 		//String arg = "a0361000005aMqp~00D61000000fBw41~T_0000000007";
 		if (arg == null) {
 			arg = "test";
