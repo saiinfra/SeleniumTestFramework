@@ -132,7 +132,7 @@ public class FilleExcelWriter {
 	public static void updateIfExists(List<TestInfoResponse> initialTestResponseList, String testScriptId, String mappingClassName) throws TestException {
 		for (Iterator iterator = initialTestResponseList.iterator(); iterator.hasNext();) {
 			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
-			if(testInfoResponse.getTestScriptId().equals(testScriptId)){
+			if(testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim())){
 				testInfoResponse.setMappingClassName(mappingClassName);
 			}
 		}
