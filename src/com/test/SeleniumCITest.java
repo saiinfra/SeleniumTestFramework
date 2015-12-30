@@ -29,7 +29,6 @@ public class SeleniumCITest {
         driver.findElement(By.cssSelector("input[value='Log In']")).click();
         driver.findElement(By.linkText("Log Out")).click();
     }
-   
      
     @After
     public void teardown() {

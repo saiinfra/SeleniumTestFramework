@@ -1,17 +1,13 @@
 package com.salesforce.ds;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.salesforce.domain.ResultInformationDO;
-import com.sforce.soap.enterprise.EnterpriseConnection;
-import com.sforce.soap.enterprise.QueryResult;
+import com.salesforce.util.Constants;
+import com.salesforce.util.SFoAuthHandle;
 import com.sforce.soap.enterprise.UpsertResult;
-import com.sforce.soap.enterprise.sobject.ASAClient__DeploymentSettingClient__c;
 import com.sforce.soap.enterprise.sobject.SObject;
 import com.sforce.soap.enterprise.sobject.Test_Script_Result__c;
-import com.util.Constants;
-import com.util.SFoAuthHandle;
 
 public class TestScriptsResultsDAO {
 
@@ -24,13 +20,11 @@ public class TestScriptsResultsDAO {
 		return null;
 	}
 
-	public boolean insert(Object obj, SFoAuthHandle sfHandle) {
+	public boolean insert(ResultInformationDO obj, SFoAuthHandle sfHandle,
+			String testscriptId, String testinformationid, String metadataLogId) {
 		// create the records
-		
-	
-		
+
 		ResultInformationDO resultInformationDO = (ResultInformationDO) obj;
-		
 
 		Test_Script_Result__c[] record = new Test_Script_Result__c[1];
 
@@ -39,10 +33,11 @@ public class TestScriptsResultsDAO {
 		a.setStatus__c(resultInformationDO.getStatus());
 		a.setActual_Result__c(resultInformationDO.getType());
 		a.setTimes_s__c(resultInformationDO.getTime());
-		a.setTest_Information__c(Constants.TestInformationID);
-		a.setTest_Script__c(Constants.TestScript);
-		//a.setTest_Steps__c(resultInformationDO.getTestcasename());
-		//a.setStep__c(1.0);
+		a.setTest_Information__c(testinformationid);
+		a.setTest_Script__c(testscriptId);
+		a.setTesting_MetadataLog__c(metadataLogId);
+		// a.setTest_Steps__c(resultInformationDO.getTestcasename());
+		// a.setStep__c(1.0);
 
 		record[0] = a;
 		commit(record, sfHandle);
@@ -67,8 +62,7 @@ public class TestScriptsResultsDAO {
 					return false;
 				}
 			}
-			System.out
-					.println("saving TestResults :");
+			System.out.println("saving TestResults :");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

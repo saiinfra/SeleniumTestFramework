@@ -41,8 +41,6 @@ public class RackspaceContactAutomation {
         String actual = actualHeadLine.getText();
         assertTrue(actual.contains(expected));
     }
-    
-   
     @After
 	public void teardown() {
 		driver.quit();

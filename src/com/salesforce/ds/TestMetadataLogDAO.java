@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.salesforce.domain.TestMetadataLogDO;
+import com.salesforce.util.Constants;
+import com.salesforce.util.MetadataLogSQLStmts;
+import com.salesforce.util.SFoAuthHandle;
 import com.sforce.soap.enterprise.EnterpriseConnection;
 import com.sforce.soap.enterprise.QueryResult;
 import com.sforce.soap.enterprise.SaveResult;
@@ -15,9 +18,6 @@ import com.sforce.soap.enterprise.UpsertResult;
 import com.sforce.soap.enterprise.sobject.MetadataLog__c;
 import com.sforce.soap.enterprise.sobject.SObject;
 import com.sforce.soap.enterprise.sobject.Test_Script_Result__c;
-import com.test.MetadataLogSQLStmts;
-import com.util.Constants;
-import com.util.SFoAuthHandle;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class TestMetadataLogDAO {
 		super();
 	}
 
-	public boolean insert(Object obj, SFoAuthHandle sfHandle) {
+	public String insert(Object obj, SFoAuthHandle sfHandle,String testInformationId) {
 		// create the records
 		TestMetadataLogDO testMetadataLogDO = (TestMetadataLogDO) obj;
 
@@ -42,16 +42,16 @@ public class TestMetadataLogDAO {
 
 		// a.setMessage__c(testMetadataLogDO.getMessage());
 		a.setStatus__c(testMetadataLogDO.getStatus());
-		a.setTest_Information__c(Constants.TestInformationID);
+		a.setTest_Information__c(testInformationId);
 		a.setTests__c(testMetadataLogDO.getTotalTests());
 		a.setFailures__c(testMetadataLogDO.getTotalFailures());
 		a.setTimes_s__c(testMetadataLogDO.getTotalTimes());
 		// a.setName__c(testMetadataLogDO.getName());
 
 		record[0] = a;
-		commit(record, sfHandle);
+		String metadatLog=commit1(record, sfHandle);
 
-		return true;
+		return metadatLog;
 	}
 
 	public boolean commit(SObject[] sobjects, SFoAuthHandle sfHandle) {
@@ -77,8 +77,33 @@ public class TestMetadataLogDAO {
 		}
 		return true;
 	}
+	public String  commit1(SObject[] sobjects, SFoAuthHandle sfHandle) {
+		String metadataLogId="";
+		try {
+			com.sforce.soap.enterprise.UpsertResult[] saveResults = sfHandle
+					.getEnterpriseConnection().upsert("Id", sobjects);
 
-	public boolean update(Object obj, SFoAuthHandle sfHandle) {
+			for (UpsertResult r : saveResults) {
+				if (r.isSuccess()) {
+					System.out.println("Created TestMetadata  record - Id: "
+							+ r.getId());
+					metadataLogId=r.getId();
+				} else {
+					for (com.sforce.soap.enterprise.Error e : r.getErrors()) {
+						throw new Exception(e.getMessage() + "-status code-"
+								+ e.getStatusCode());
+					}
+					return metadataLogId;
+				}
+			}
+			System.out.println("saving TestResults :");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return metadataLogId;
+	}
+
+	public boolean update(Object obj, SFoAuthHandle sfHandle,String testInformationId) {
 		try {
 
 			if (obj == null) {
@@ -90,7 +115,10 @@ public class TestMetadataLogDAO {
 			if (metadataLogDOobj instanceof TestMetadataLogDO) {
 				metadataLog__c.setId(metadataLogDOobj.getId());
 				metadataLog__c.setStatus__c(metadataLogDOobj.getStatus());
-				metadataLog__c.setMessage__c(metadataLogDOobj.getMessage());
+				metadataLog__c.setTest_Information__c(testInformationId);
+				metadataLog__c.setTests__c(metadataLogDOobj.getTotalTests());
+				metadataLog__c.setFailures__c(metadataLogDOobj.getTotalFailures());
+				metadataLog__c.setTimes_s__c(metadataLogDOobj.getTotalTimes());
 
 			}
 

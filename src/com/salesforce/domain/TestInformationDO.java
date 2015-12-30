@@ -11,25 +11,23 @@ public class TestInformationDO {
 	private String organizationid;
 	private String priority;
 	private String title;
-	public TestInformationDO(String id)
-	{
-		this.id=id;
-		
-		
+
+	public TestInformationDO(String id) {
+		this.id = id;
 	}
 
-	public TestInformationDO(String id,String application,String description,Double errors,String executionURL,String modulename,String organizationid,String priority,String title)
-	{
-		this.id=id;
-		this.application=application;
-		this.description=description;
-		this.errors=errors;
-		this.executionURL=executionURL;
-		this.modulename=modulename;
-		this.organizationid=organizationid;
-		this.priority=priority;
-		this.title=title;
-		
+	public TestInformationDO(String id, String application, String description, Double errors, String executionURL,
+			String modulename, String organizationid, String priority, String title) {
+		this.id = id;
+		this.application = application;
+		this.description = description;
+		this.errors = errors;
+		this.executionURL = executionURL;
+		this.modulename = modulename;
+		this.organizationid = organizationid;
+		this.priority = priority;
+		this.title = title;
+
 	}
 
 	public String getId() {
@@ -103,6 +101,5 @@ public class TestInformationDO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
 
 }

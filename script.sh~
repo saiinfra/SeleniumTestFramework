@@ -1,0 +1,10 @@
+#!/bin/sh
+rmdir $1
+mkdir $1
+cd $1
+git init
+git config core.sparseCheckout true
+echo src > .git/info/sparse-checkout
+git remote add -f origin $2
+git pull origin master
+

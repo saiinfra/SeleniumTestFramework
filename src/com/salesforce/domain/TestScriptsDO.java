@@ -3,6 +3,7 @@ package com.salesforce.domain;
 public class TestScriptsDO {
 
 	String id;
+	String testScritId;
 	String testScritName;
 	String actualResult;
 	String expectedResult;
@@ -12,12 +13,15 @@ public class TestScriptsDO {
 	String tests;
 	String testSteps;
 	String times;
+	String status;
+	String sciptStatus;
 
 	public TestScriptsDO(String id, String testScritName, String actualResult,
 			String expectedResult, String Step, String testData,
 			String testInformation, String tests, String testSteps, String times) {
 
 		this.id = id;
+		this.testScritId = testScritName;
 		this.testScritName = testScritName;
 		this.actualResult = actualResult;
 		this.expectedResult = expectedResult;
@@ -30,12 +34,19 @@ public class TestScriptsDO {
 		this.times = times;
 
 	}
-	public TestScriptsDO(String id, String testScritName) {
 
+	public TestScriptsDO(String id, String testScritName) {
 		this.id = id;
 		this.testScritName = testScritName;
-		
-
+		this.testScritId = testScritName;
+	}
+	
+	public TestScriptsDO(String id, String testScritName, String testSteps, String sciptStatus) {
+		this.id = id;
+		this.testScritName = testScritName;
+		this.testScritId = testScritName;
+		this.testSteps = testSteps;
+		this.sciptStatus = sciptStatus;
 	}
 
 	public String getId() {
@@ -114,8 +125,34 @@ public class TestScriptsDO {
 		return times;
 	}
 
+	public String getTestScritId() {
+		return testScritId;
+	}
+
+	public void setTestScritId(String testScritId) {
+		this.testScritId = testScritId;
+	}
+
 	public void setTimes(String times) {
 		this.times = times;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getSciptStatus() {
+		return sciptStatus;
+	}
+
+	public void setSciptStatus(String sciptStatus) {
+		this.sciptStatus = sciptStatus;
+	}
+	
+	
 
 }

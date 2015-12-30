@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ant Example" default="exec" basedir=".">
+	<property name="project_name" value="Selenium_Test" />
+	<property name="src" location="src" />
+	<property name="build" location="build/classes" />
+	<property name="lib" location="lib" />
+	<property name="reports" location="reports" />
+	<property name="test.reports" location="reports" />
+	<property name="junit.output.dir" value="junit" />
+
+	<path id="classpath.base">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${build.dir}" />
+	</path>
+
+	<path id="Selenium_Test.classpath">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${build.dir}" />
+	</path>
+
+	<target name="init" depends="clean">
+		<!-- <mkdir dir="${build}" /> <mkdir dir="${reports}" /> <mkdir dir="${reports}/raw/" 
+			/> <mkdir dir="${reports}/html/" /> -->
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}" description="compile the source code ">
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="clean">
+		<!-- <delete dir="build" /> <delete dir="${reports}" /> -->
+	</target>
+
+	<!-- <target name="test" depends="run-tests">
+		<junitreport todir="${reports}">
+			<fileset dir="${reports}/raw/">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="${reports}/html/" />
+		</junitreport>
+	</target> -->
+
+	<target name="runReports">
+		<property name="testparam1" value="" />
+		<junit printsummary="on">
+			<classpath>
+				<pathelement path="${build}" />
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<batchtest fork="yes" todir="${reports}/raw/">
+				<formatter type="xml" />
+				<fileset dir="${src}">
+					<include name="**/${testparam1}.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+
+	<target name="exec" depends="compile">
+		<junit printsummary="on">
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<!-- <test name="com.test.TestRunner" haltonfailure="no"
+				todir="${report}/xml" outfile="TEST-result">
+				<formatter type="xml" />
+			</test> -->
+
+			<java classname="com.test.TestRunner">
+				<classpath>
+					<pathelement path="${build}" />
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+				<arg value="SalesforceTest" />
+			</java>
+
+		</junit>
+		<junitreport todir="${report}">
+			<fileset dir="${report}/xml">
+				<include name="TEST*.xml" />
+			</fileset>
+			<report format="frames" todir="${report}/html" />
+		</junitreport>
+	</target>
+
+	<target name="test-html" depends="compile">
+		<junit fork="yes" printsummary="no" haltonfailure="no">
+			<batchtest fork="yes" todir="${test.reports}">
+				<fileset dir="${build}">
+					<include name="**/*Test.class" />
+				</fileset>
+			</batchtest>
+			<formatter type="xml" />
+			<classpath refid="classpath.base" />
+		</junit>
+
+		<junitreport todir="${test.reports}">
+			<fileset dir="${test.reports}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${test.reports}" />
+		</junitreport>
+	</target>
+
+
+
+
+
+
+	<target name="all2" depends="clean" />
+
+	<target name="runJunit" depends="compile">
+		<property name="testparam1" value="" />
+		<echo> Running test class ${testparam1}......... </echo>
+
+		<java classname="com.test.TestRunner">
+			<classpath>
+				<pathelement path="${build}" />
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="${testparam1}" />
+		</java>
+	</target>
+
+	<target name="runApp">
+		<property name="testparam" value="RunSalesForceTestSuite" />
+		<!-- <echo> Running test class ${testparam1}......... </echo> <antcall 
+			target="runJunit"> <param name="testparam1" value="${testparam}" /> </antcall> -->
+		<echo> Generating reports test class ${testparam1}......... </echo>
+		<antcall target="runReports">
+			<param name="testparam1" value="${testparam}" />
+		</antcall>
+	</target>
+
+	<target name="doSomethingElse">
+		<echo message="param1=${param1}" />
+	</target>
+
+
+	<target name="all" depends="compile">
+		<property name="testparam" value="" />
+		<echo> Running test class ${testparam}......... </echo>
+		<junit printsummary="on">
+			<classpath refid="classpath.test" />
+			<batchtest fork="yes" todir="${build.dir}">
+				<!-- The fileset element specifies which tests to run. -->
+				<!-- There are many different ways to specify filesets, this is just 
+					one example. -->
+				<fileset dir="${test.dir}" includes="**/${testparam}.java" />
+			</batchtest>
+		</junit>
+	</target>
+
+
+
+	<target name="SalesforceTest">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="com.test.SalesforceTest" todir="${junit.output.dir}" />
+			<classpath refid="classpath.base" />
+		</junit>
+	</target>
+
+	<target name="junitreport" depends="runReports">
+		<junitreport todir="${junit.output.dir}">
+			<fileset dir="${junit.output.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.output.dir}" />
+		</junitreport>
+	</target>
+
+
+	<target name="Selenium_Test">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="com.junit.testsuite.First" todir="${junit.output.dir}" />
+			<test name="com.junit.testsuite.RunTestSuite" todir="${junit.output.dir}" />
+			<test name="com.junit.testsuite.Second" todir="${junit.output.dir}" />
+			<test name="com.junit.testsuite.Third" todir="${junit.output.dir}" />
+			<test name="com.test.RunSalesForceTestSuite" todir="${junit.output.dir}" />
+			<test name="com.test.SalesforceTest" todir="${junit.output.dir}" />
+			<test name="com.test.SampleTest" todir="${junit.output.dir}" />
+			<test name="com.test.SeleniumNewtoursTest" todir="${junit.output.dir}" />
+			<classpath refid="Selenium_Test.classpath" />
+		</junit>
+	</target>
+	<target name="RunTestSuite">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="com.junit.testsuite.RunTestSuite" todir="${junit.output.dir}" />
+			<classpath refid="Selenium_Test.classpath" />
+		</junit>
+	</target>
+	<target name="RunSalesForceTestSuite">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="com.test.RunSalesForceTestSuite" todir="${junit.output.dir}" />
+			<classpath refid="Selenium_Test.classpath" />
+		</junit>
+	</target>
+	<target name="FirstTestCase">
+		<java classname="com.test.FirstTestCase" failonerror="true" fork="yes">
+			<classpath refid="Selenium_Test.classpath" />
+		</java>
+	</target>
+</project>
