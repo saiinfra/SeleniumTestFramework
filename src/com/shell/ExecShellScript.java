@@ -1,11 +1,17 @@
 package com.shell;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.salesforce.util.AppUtil;
 import com.salesforce.util.Constants;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 public class ExecShellScript {
 
@@ -58,13 +64,14 @@ public class ExecShellScript {
 
 	public static void compile(String fileName) {
 		try {
-			String srcPath = AppUtil.getCurrentPath() + Constants.JavaSourcePath;
+			String srcPath = AppUtil.getCurrentPath() +Constants.DirSeperator+ Constants.JavaSourcePath +Constants.DirSeperator;
 			// String targetPath =
 			// "/home/infra3/eclipse_workspace/selenium/s1/Selenium_Test/build/classes";
 			String targetPath = AppUtil.getCurrentPath() + Constants.DirSeperator + Constants.BinDir;
-			fileName = srcPath + fileName;
-			Process proc = Runtime.getRuntime().exec(AppUtil.getCurrentPath() + Constants.Space + "compile.sh"
-					+ Constants.Space + targetPath + Constants.Space + fileName);
+			String fileName1 = srcPath + fileName;
+			String execString=AppUtil.getCurrentPath() + Constants.DirSeperator + "compile.sh"
+					+ Constants.Space + targetPath + Constants.Space + fileName1;
+			Process proc = Runtime.getRuntime().exec(execString);
 			BufferedReader read = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			try {
 				proc.waitFor();
@@ -125,6 +132,25 @@ public class ExecShellScript {
 
 			String execString = AppUtil.getCurrentPath() + Constants.DirSeperator + "checkOutMappingFile.sh " + arg1
 					+ Constants.Space + arg2 + Constants.Space + arg3;
+			System.out.println("execString: "+execString);
+			Process proc = Runtime.getRuntime().exec(execString);
+			BufferedReader read = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			try {
+				proc.waitFor();
+			} catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+			}
+			/*
+			 * while (read.ready()) { System.out.println(read.readLine()); }
+			 */
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void testGit() {
+		try {
+			String execString = AppUtil.getCurrentPath() + Constants.DirSeperator + "gitconfig.sh";
 			System.out.println("execString: "+execString);
 			Process proc = Runtime.getRuntime().exec(execString);
 			BufferedReader read = new BufferedReader(new InputStreamReader(proc.getInputStream()));

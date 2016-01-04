@@ -1,9 +1,4 @@
 #!/bin/sh
 
-java -cp "lib/*:/home/srikanth/Selenium_Test/build/classes" org.junit.runner.JUnitCore $1
-#java -classpath ./lib/*.jar:/home/infra3/eclipse_workspace/selenium/s1/SeleniumModified/build/classes org.junit.runner.JUnitCore $1
-
-#echo java -classpath ./lib/*.jar:/home/infra3/eclipse_workspace/selenium/s1/SeleniumModified/build/classes org.junit.runner.JUnitCore $1
+java -cp "./lib/*:./bin" org.junit.runner.JUnitCore $1
 exit
-
-

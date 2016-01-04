@@ -22,8 +22,9 @@ public abstract class TestProcessingTemplate {
 			if (!fileFoundStr.equals("NotFound") && (testInfoResponse.getMappingClassName() != null
 					|| !testInfoResponse.getMappingClassName().isEmpty())) {
 				try {
-					ExecShellScript.copyFile(fileFoundStr);
-					ExecShellScript.compile(testInfoResponse.getMappingClassName() + ".java");
+					//ExecShellScript.copyFile(fileFoundStr);
+					String compileJava=testInfoResponse.getMappingClassName() + ".java";
+					ExecShellScript.compile(compileJava);
 					result = executeTest("com.test." + testInfoResponse.getMappingClassName());
 				} catch (Exception e) {
 					e.printStackTrace();

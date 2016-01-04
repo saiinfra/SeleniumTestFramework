@@ -22,8 +22,10 @@ public class SFDomainUtil {
 		TestInformationDAO testInformationDAO = (TestInformationDAO) Factory.getObjectInstance("TestInformationDAO");
 		List<Object> testInfoList = testInformationDAO.findById(id, SalesForceUtil.getSFHandle());
 		TestInformationDO testInformationDO = null;
-		for (Iterator iterator = testInfoList.iterator(); iterator.hasNext();) {
-			testInformationDO = (TestInformationDO) iterator.next();
+		if (testInfoList != null) {
+			for (Iterator iterator = testInfoList.iterator(); iterator.hasNext();) {
+				testInformationDO = (TestInformationDO) iterator.next();
+			}
 		}
 		return testInformationDO;
 	}
@@ -36,25 +38,34 @@ public class SFDomainUtil {
 
 	public static List<TestInfoResponse> prepareResponseDomainObject(TestInformationDO testInformationDO,
 			String testInfoId) {
-		List<TestInfoResponse> responseObjList = new ArrayList<TestInfoResponse>();
+		List<TestInfoResponse> responseObjList = null;
 		List<Object> testScriptsList = getTestScriptsDetails(testInfoId);
 		TestInfoResponse testInfoResponse = null;
 
 		if (testScriptsList.size() > 0) {
+			responseObjList = new ArrayList<TestInfoResponse>();
 			for (int i = 0; i < testScriptsList.size(); i++) {
 				TestScriptsDO testScriptsDO = (TestScriptsDO) testScriptsList.get(i);
-				testInfoResponse = new TestInfoResponse(testInformationDO.getId(), testScriptsDO.getId(),
-						testInformationDO.getApplication(), testInformationDO.getModulename(),
-						testInformationDO.getTitle(), testScriptsDO.getTestScritId(), testScriptsDO.getTestSteps(),
-						testScriptsDO.getSciptStatus(), "");
+				if (testInformationDO == null) {
+					testInfoResponse = new TestInfoResponse(null, testScriptsDO.getId(), null, null, null,
+							testScriptsDO.getTestScritId(), testScriptsDO.getTestSteps(),
+							testScriptsDO.getSciptStatus(), "");
+				} else {
+					testInfoResponse = new TestInfoResponse(testInformationDO.getId(), testScriptsDO.getId(),
+							testInformationDO.getApplication(), testInformationDO.getModulename(),
+							testInformationDO.getTitle(), testScriptsDO.getTestScritId(), testScriptsDO.getTestSteps(),
+							testScriptsDO.getSciptStatus(), "");
+				}
 				responseObjList.add(testInfoResponse);
 			}
-		}
-		else{
-			testInfoResponse = new TestInfoResponse(testInformationDO.getId(), null,
-					testInformationDO.getApplication(), testInformationDO.getModulename(),
-					testInformationDO.getTitle(), null, null, null, null);
-			responseObjList.add(testInfoResponse);
+		} else {
+			if (testInformationDO != null) {
+				responseObjList = new ArrayList<TestInfoResponse>();
+				testInfoResponse = new TestInfoResponse(testInformationDO.getId(), null,
+						testInformationDO.getApplication(), testInformationDO.getModulename(),
+						testInformationDO.getTitle(), null, null, null, null);
+				responseObjList.add(testInfoResponse);
+			}
 		}
 		return responseObjList;
 	}

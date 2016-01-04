@@ -15,6 +15,7 @@ import com.salesforce.template.FirstCustPreProcessTemplate;
 import com.salesforce.template.FirstCustProcessTemplate;
 import com.salesforce.util.AppUtil;
 import com.salesforce.util.SFoAuthHandle;
+import com.shell.ExecShellScript;
 
 public class TestRunner {
 
@@ -42,15 +43,17 @@ public class TestRunner {
 	}
 
 	public static void main(String[] args) {
-		 String arg = args[0];
+		String arg = args[0];
 		// testId~OrgId~TestInfoName
 		//String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
-		//String arg = "a0361000005aMqp~00D61000000fBw41~T_0000000007";
+	  	//String arg = "a0361000005aMqp~00D61000000fBw43~T_0000000007";
+		/*
+		String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
 		if (arg == null) {
 			arg = "test";
 		}
+		*/
 		init(arg);
-		TestRunner tr = new TestRunner();
 	}
 
 	private static void init(String inputTokens) {

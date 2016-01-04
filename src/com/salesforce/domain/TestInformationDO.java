@@ -12,6 +12,10 @@ public class TestInformationDO {
 	private String priority;
 	private String title;
 
+	public TestInformationDO() {
+		super();
+	}
+	
 	public TestInformationDO(String id) {
 		this.id = id;
 	}
