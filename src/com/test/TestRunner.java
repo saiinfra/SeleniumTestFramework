@@ -47,12 +47,11 @@ public class TestRunner {
 		// testId~OrgId~TestInfoName
 		//String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 	  	//String arg = "a0361000005aMqp~00D61000000fBw43~T_0000000007";
-		/*
-		String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
+	
+		/*String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
 		if (arg == null) {
 			arg = "test";
-		}
-		*/
+		}*/
 		init(arg);
 	}
 

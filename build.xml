@@ -62,7 +62,7 @@
 	<target name="all2" depends="clean, test" />
 
 	<target name="all1" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="RunSalesForceTestSuite" />
 		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
@@ -78,7 +78,7 @@
 
 
 	<target name="all" depends="compile">
-		<property name="testparam" value="Google" />
+		<property name="testparam" value="" />
 		<echo> Running test class ${testparam}......... </echo>
 		<junit printsummary="on">
 			<classpath refid="classpath.test" />
