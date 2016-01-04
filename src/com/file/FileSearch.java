@@ -46,7 +46,7 @@ public class FileSearch {
 	public static String getPath(String fileName){
 		String path = "NotFound";
 		// try different directory and filename :)
-		searchDirectory(new File(Constants.CheckoutPath1), fileName);
+		searchDirectory(new File(Constants.JavaSrcSearchPath), fileName);
 
 		int count = getResult().size();
 		if (count == 0) {
