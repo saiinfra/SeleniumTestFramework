@@ -64,8 +64,8 @@ public class ExecShellScript {
 
 	public static void compile(String fileName) {
 		try {
-			String srcPath = AppUtil.getCurrentPath() +Constants.DirSeperator+ Constants.JavaSourcePath +Constants.DirSeperator;
-			//String srcPath = Constants.CheckoutFilePath+Constants.DirSeperator+ Constants.JavaSourcePath +Constants.DirSeperator;
+			//String srcPath = AppUtil.getCurrentPath() +Constants.DirSeperator+ Constants.JavaSourcePath +Constants.DirSeperator;
+			String srcPath = Constants.CheckoutFilePath+Constants.DirSeperator+ Constants.JavaSourcePath +Constants.DirSeperator;
 			
 			// String targetPath =
 			// "/home/infra3/eclipse_workspace/selenium/s1/Selenium_Test/build/classes";
