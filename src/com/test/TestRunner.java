@@ -43,13 +43,13 @@ public class TestRunner {
 	}
 
 	public static void main(String[] args) {
-		//String arg = args[0];
+		String arg = args[0];
 		// testId~OrgId~TestInfoName
 		// String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 		// String arg = "a0361000005aMqp~00D61000000fBw43~T_0000000007";
 		//String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
 		//String arg = "a0361000005aWPoAAM~00D61000000fBw4~T_0000000027";
-		String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
+		//String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
 		
 		if (arg == null) { 
 			arg = "test"; 
