@@ -46,7 +46,7 @@ public class FileSearch {
 	public static String getPath(String fileName){
 		String path = "NotFound";
 		// try different directory and filename :)
-		searchDirectory(new File(Constants.JavaSrcSearchPath), fileName);
+		searchDirectory(new File(Constants.CheckoutFilePath), fileName);
 
 		int count = getResult().size();
 		if (count == 0) {
@@ -75,7 +75,7 @@ public class FileSearch {
 	private static void search(File file,  String fileNameToSearch) {
 
 		if (file.isDirectory()) {
-			System.out.println("Searching directory ... " + file.getAbsoluteFile());
+			//System.out.println("Searching directory ... " + file.getAbsoluteFile());
 
 			// do you have permission to read this directory?
 			if (file.canRead()) {

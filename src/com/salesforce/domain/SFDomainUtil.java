@@ -49,12 +49,12 @@ public class SFDomainUtil {
 				if (testInformationDO == null) {
 					testInfoResponse = new TestInfoResponse(null, testScriptsDO.getId(), null, null, null,
 							testScriptsDO.getTestScritId(), testScriptsDO.getTestSteps(),
-							testScriptsDO.getSciptStatus(), "");
+							testScriptsDO.getSciptStatus(), null, testScriptsDO.getTestScritId());
 				} else {
 					testInfoResponse = new TestInfoResponse(testInformationDO.getId(), testScriptsDO.getId(),
 							testInformationDO.getApplication(), testInformationDO.getModulename(),
 							testInformationDO.getTitle(), testScriptsDO.getTestScritId(), testScriptsDO.getTestSteps(),
-							testScriptsDO.getSciptStatus(), "");
+							testScriptsDO.getSciptStatus(), null, testScriptsDO.getTestScritId());
 				}
 				responseObjList.add(testInfoResponse);
 			}
@@ -63,7 +63,7 @@ public class SFDomainUtil {
 				responseObjList = new ArrayList<TestInfoResponse>();
 				testInfoResponse = new TestInfoResponse(testInformationDO.getId(), null,
 						testInformationDO.getApplication(), testInformationDO.getModulename(),
-						testInformationDO.getTitle(), null, null, null, null);
+						testInformationDO.getTitle(), null, null, null, null,null);
 				responseObjList.add(testInfoResponse);
 			}
 		}
@@ -85,7 +85,7 @@ public class SFDomainUtil {
 					TestInfoResponse sTestCaseDObj = new TestInfoResponse(testInformationDO.getId(),
 							testScriptsDO.getId(), testInformationDO.getApplication(),
 							testInformationDO.getModulename(), testInformationDO.getTitle(),
-							testScriptsDO.getTestScritId(), testScriptsDO.getTestScritName(), "status",
+							testScriptsDO.getTestScritId(), testScriptsDO.getTestScritName(), "status", "path",
 							excelTestCaseDObj.getMappingClassName());
 					if (testScriptsDO.getTestScritId().equals(excelTestCaseDObj.getTestScriptId())) {
 						System.out.println("excelTestCaseDObj getTestScriptId :" + excelTestCaseDObj.getTestScriptId());

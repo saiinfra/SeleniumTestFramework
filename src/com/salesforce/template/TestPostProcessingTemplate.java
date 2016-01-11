@@ -11,6 +11,7 @@ import com.salesforce.domain.ResultInformationDO;
 import com.salesforce.domain.SFDomainUtil;
 import com.salesforce.domain.TestInfoResponse;
 import com.salesforce.domain.TestMetadataLogDO;
+import com.salesforce.domain.TestResponse;
 import com.salesforce.domain.TestScriptsDO;
 import com.salesforce.ds.TestMetadataLogDAO;
 import com.salesforce.ds.TestScriptsDAO;
@@ -27,10 +28,10 @@ public abstract class TestPostProcessingTemplate {
 	private static ArrayList<Integer> failureList = new ArrayList<>();
 	private static ArrayList<Integer> noofTestList = new ArrayList<>();
 	private static ArrayList<Double> totalTimeList = new ArrayList<>();
+	
+	public abstract void doPostProcessing(TestResponse tResponse);
 
-	public abstract void doPostProcessing();
-
-	public void doPostProcessing1() {
+	public void doPostProcessing1(TestResponse tResponse) {
 		// TODO Auto-generated method stub
 		String mappingClassName = null;
 		if(this.testInfoResponse == null){
@@ -39,7 +40,7 @@ public abstract class TestPostProcessingTemplate {
 		else{
 			mappingClassName = this.testInfoResponse.getMappingClassName();
 		}
-		junitOutput = resultProcessing(mappingClassName, result);
+		junitOutput = resultProcessing(mappingClassName, result, tResponse);
 		updateTestScriptExecutionResults();
 		computeResults();
 	}
@@ -65,7 +66,7 @@ public abstract class TestPostProcessingTemplate {
 		return metadatLogId;
 	}
 
-	private ResultInformationDO resultProcessing(String testcasename, Result result) {
+	private ResultInformationDO resultProcessing(String testcasename, Result result, TestResponse tResponse) {
 		double time = 0.0;
 		int numberOfTest = 0;
 		int numberOfTestFail = 0;
@@ -92,6 +93,9 @@ public abstract class TestPostProcessingTemplate {
 			numberOfTestFail = result.getFailureCount();
 			numberOfTestIgnore = result.getIgnoreCount();
 
+			if(!tResponse.isDoesMappingFileExist()){
+				resultInformationDO.setType("Automate java test scripts are created. please update to execute.");
+			}
 			if (numberOfTestFail > 0) {
 
 				for (Failure failure : result.getFailures()) {

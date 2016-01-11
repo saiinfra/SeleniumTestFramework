@@ -12,8 +12,10 @@ public class TestInfoResponse {
 	String testScriptId;
 	String testScriptName;
 	String status;
+	String path;
 	String mappingClassName;
 	Result result;
+	boolean excelRecordExists=false;
 
 	public TestInfoResponse() {
 		super();
@@ -29,7 +31,7 @@ public class TestInfoResponse {
 	}
 
 	public TestInfoResponse(String sfTestInfoParentId, String sfTestInfoScriptRecordId, String application,
-			String module, String title, String testScriptId, String testScriptName, String status,
+			String module, String title, String testScriptId, String testScriptName, String status, String path,
 			String mappingClassName) {
 		this.sfTestInfoParentId = sfTestInfoParentId;
 		this.sfTestInfoScriptRecordId = sfTestInfoScriptRecordId;
@@ -39,9 +41,10 @@ public class TestInfoResponse {
 		this.testScriptId = testScriptId;
 		this.testScriptName = testScriptName;
 		this.status = status;
+		this.path = path;
 		this.mappingClassName = mappingClassName;
 	}
-
+	
 	public String getApplication() {
 		return application;
 	}
@@ -126,6 +129,22 @@ public class TestInfoResponse {
 
 	public void setSfTestInfoScriptRecordId(String sfTestInfoScriptRecordId) {
 		this.sfTestInfoScriptRecordId = sfTestInfoScriptRecordId;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public boolean isExcelRecordExists() {
+		return excelRecordExists;
+	}
+
+	public void setExcelRecordExists(boolean excelRecordExists) {
+		this.excelRecordExists = excelRecordExists;
 	}
 
 }

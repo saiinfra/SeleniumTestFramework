@@ -46,7 +46,7 @@ public class RepoUtil {
 		try {
 			System.out.println(AppUtil.getCurrentPath() + Constants.DirSeperator+Constants.JavaSourcePath1+Constants.DirSeperator);
 			System.out.println(file.getName());
-			Files.move(Paths.get(checkOutDir.getPath()),
+			Files.copy(Paths.get(checkOutDir.getPath()),
 					Paths.get(AppUtil.getCurrentPath() + Constants.DirSeperator+Constants.JavaSourcePath+Constants.DirSeperator+file.getName()),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
@@ -54,6 +54,7 @@ public class RepoUtil {
 			e.printStackTrace();
 		}
 	}
+	
 	public static void CheckIn(GitRepoDO gitRepoDO, String sourcePath, File file) {
 		File checkOutDir = new File(Constants.CheckoutPath1);
 		RepoClass.deleteDirectory(checkOutDir);
@@ -73,7 +74,28 @@ public class RepoUtil {
 		}
 		RepoClass.commit(git, gitRepoDO);
 	}
-	public static void CheckOut(GitRepoDO gitRepoDO) {
+	
+	public static void CheckIn(Git git, GitRepoDO gitRepoDO) {
+		try {
+			RepoClass.addFile(git);
+		} catch (IOException | GitAPIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		RepoClass.commit(git, gitRepoDO);
+	}
+	
+	public static void CheckInChechputFolder(Git git, GitRepoDO gitRepoDO) {
+		try {
+			RepoClass.addFile(git);
+		} catch (IOException | GitAPIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		RepoClass.commit(git, gitRepoDO);
+	}
+	
+	public static Git CheckOut(GitRepoDO gitRepoDO) {
 		File checkOutDir = new File(Constants.CheckoutPath1);
 		RepoClass.deleteDirectory(checkOutDir);
 		Git git = null;
@@ -83,8 +105,9 @@ public class RepoUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+		return git;
 	}
+	
 	public static void CheckInSrc(GitRepoDO gitRepoDO, String sourcePath, File file) {
 		File checkOutDir = new File(Constants.CheckoutPath1);
 		RepoClass.deleteDirectory(checkOutDir);

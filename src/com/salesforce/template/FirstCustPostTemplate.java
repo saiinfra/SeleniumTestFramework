@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.runner.Result;
 
 import com.salesforce.domain.TestInfoResponse;
+import com.salesforce.domain.TestResponse;
 
 public class FirstCustPostTemplate extends TestPostProcessingTemplate {
 
@@ -15,8 +16,9 @@ public class FirstCustPostTemplate extends TestPostProcessingTemplate {
 	}
 
 	@Override
-	public void doPostProcessing() {
-		doPostProcessing1();
+	public void doPostProcessing(TestResponse tResponse) {
+		// TODO Auto-generated method stub
+		doPostProcessing1(tResponse);
 	}
 
 }

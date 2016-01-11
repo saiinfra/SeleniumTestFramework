@@ -3,64 +3,69 @@ package com.salesforce.util;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.jgit.api.Git;
+
 import com.salesforce.domain.GitRepoDO;
 import com.salesforce.domain.TestInfoRequest;
 import com.salesforce.domain.TestInfoResponse;
+import com.salesforce.domain.TestResponse;
 import com.salesforce.excel.FilleExcelWriter;
 import com.salesforce.exception.TestException;
 import com.shell.ExecShellScript;
 
 public class ExcelUtil {
 
-	public static List<String> readMappingFile(File mappingFile,List<TestInfoResponse> initialResonseList) {
-		List<String> list = null;
+	public static void readMappingFileAndSyncWithSF(File mappingFile, TestResponse tResponse) {
 		try {
-			list = FilleExcelWriter.readFile(mappingFile,initialResonseList);
+			FilleExcelWriter.readFile(mappingFile,tResponse);
 		} catch (TestException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		return list;
 	}
 
 	public static void readEmptyMappingFile(
 			List<TestInfoResponse> initialTestResponseList, String fileName,
 			TestInfoRequest testInfoRequest) {
-		try {
-			if (initialTestResponseList == null
-					|| initialTestResponseList.isEmpty()) {
-				GitRepoDO gitRepoDO = new GitRepoDO(Constants.TempRepoUserName,
-						Constants.TempRepoPassword, Constants.TempRepoURL);
-				String fileNameWithExt = fileName + Constants.MappingFileType;
-				String sourcePath = AppUtil.getCurrentPath();
+		if (initialTestResponseList == null
+				|| initialTestResponseList.isEmpty()) {
+			GitRepoDO gitRepoDO = new GitRepoDO(Constants.TempRepoUserName,
+					Constants.TempRepoPassword, Constants.TempRepoURL);
+			String fileNameWithExt = fileName + Constants.MappingFileType;
+			String sourcePath = AppUtil.getCurrentPath();
 
-				File mappingFileWithPath = new File(AppUtil.getCurrentPath()
-						+ Constants.DirSeperator + fileNameWithExt);
-				// RepoUtil.CheckIn(gitRepoDO, sourcePath, mappingFileWithPath);
-			}
-
-			String mappingFolderName = Constants.MappingFolderName;
-			ExecShellScript
-					.checkOutMappingFile(mappingFolderName,
-							testInfoRequest.getGitRepoURL(),
-							Constants.CheckoutFilePath);
-			FilleExcelWriter.readFileAndUpdateMappingClass(
-					initialTestResponseList, fileName);
-		} catch (TestException e) {
-			System.out.println("Error: " + e.getMessage());
+			File mappingFileWithPath = new File(AppUtil.getCurrentPath()
+					+ Constants.DirSeperator + fileNameWithExt);
+			// RepoUtil.CheckIn(gitRepoDO, sourcePath, mappingFileWithPath);
 		}
-	}
 
+		String mappingFolderName = Constants.MappingFolderName;
+		ExecShellScript
+				.checkOutMappingFile(mappingFolderName,
+						testInfoRequest.getGitRepoURL(),
+						Constants.CheckoutFilePath);
+		FilleExcelWriter.readFileAndUpdateMappingClass(
+				initialTestResponseList, fileName);
+	}
+	
+	
+	public static void createMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+		FilleExcelWriter.createMappingFileAndCheckIn(tResponse, git);
+	}
+	
 	public static void createMappingFileAndCheckIn(String fileName,
 			String testInfoId) {
 		FilleExcelWriter.createMappingFileAndCheckIn(fileName, testInfoId);
 	}
 
-	public static void createTestCaseAndCheckIn(List<String> classList,
-			String testInfoId) {
-		FilleExcelWriter.createTestCaseAndCheckIn(classList, testInfoId);
+	public static void updateMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+		FilleExcelWriter.updateMappingFileAndCheckIn(tResponse, git);
+	}
+	
+	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList) {
+		FilleExcelWriter.createTestCaseAndCheckIn(testResponseList);
 	}
 
-	public static void checkout(String gitrepoURL) {
+	public static Git checkout(String gitrepoURL) {
 
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
@@ -68,8 +73,8 @@ public class ExcelUtil {
 
 		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
 
-		RepoUtil.CheckOut(gitRepoDO);
-
+		Git git = RepoUtil.CheckOut(gitRepoDO);
+		return git;
 	}
 
 }
