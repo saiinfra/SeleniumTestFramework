@@ -19,7 +19,7 @@ public class RepoUtil {
 				+ file.getName());
 		try {
 			System.out.println(file.getName());
-			Files.move(Paths.get(file.getPath()),
+			Files.copy(Paths.get(file.getPath()),
 					Paths.get(checkOutDir.getPath()),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
@@ -32,7 +32,7 @@ public class RepoUtil {
 				+ file.getName());
 		try {
 			System.out.println(file.getName());
-			Files.move(Paths.get(file.getPath()),
+			Files.copy(Paths.get(file.getPath()),
 					Paths.get(checkOutDir.getPath()),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
