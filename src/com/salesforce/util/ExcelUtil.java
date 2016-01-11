@@ -61,8 +61,8 @@ public class ExcelUtil {
 		FilleExcelWriter.updateMappingFileAndCheckIn(tResponse, git);
 	}
 	
-	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList) {
-		FilleExcelWriter.createTestCaseAndCheckIn(testResponseList);
+	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList, String fileName) {
+		FilleExcelWriter.createTestCaseAndCheckIn(testResponseList,fileName);
 	}
 
 	public static Git checkout(String gitrepoURL) {

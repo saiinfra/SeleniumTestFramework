@@ -10,7 +10,6 @@ public class CreateFileUtil {
 
 	public static void prepareJavaTestFile(String fileName) {
 		try {
-			String content = "This is the content to write into file";
 			sb = new StringBuffer();
 			File file = new File(AppUtil.getCurrentPath()
 					+ Constants.DirSeperator + fileName + ".java");

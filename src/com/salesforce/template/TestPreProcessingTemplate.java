@@ -8,15 +8,19 @@ import java.util.StringTokenizer;
 import org.eclipse.jgit.api.Git;
 
 import com.file.FileSearch;
+import com.salesforce.domain.GitRepoDO;
 import com.salesforce.domain.SFDomainUtil;
 import com.salesforce.domain.TestInfoRequest;
 import com.salesforce.domain.TestInfoResponse;
 import com.salesforce.domain.TestInformationDO;
 import com.salesforce.domain.TestResponse;
+import com.salesforce.excel.FilleExcelWriter;
+import com.salesforce.exception.TestException;
 import com.salesforce.util.AppUtil;
 import com.salesforce.util.Constants;
 import com.salesforce.util.ExcelUtil;
 import com.salesforce.util.RepoClass;
+import com.salesforce.util.RepoUtil;
 
 public abstract class TestPreProcessingTemplate {
 
@@ -65,8 +69,6 @@ public abstract class TestPreProcessingTemplate {
 
 		if (fileFound.equals("NotFound")) {
 			tResponse.setMappingFileExist(false);
-			// ExcelUtil.createMappingFileAndCheckIn(testInfoRequest.getOrgId(),
-			// testInfoRequest.getTestInfoId());
 			ExcelUtil.createMappingFileAndCheckIn(tResponse, git);
 		} else {
 			// read xls file from checkout folder testcases
@@ -83,13 +85,78 @@ public abstract class TestPreProcessingTemplate {
 		prepareRequest(inputTokens, tResponse);
 		Git git = checkOutCustomerProject(tResponse);
 		inspectMappingFile(git, tResponse);
+		prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
+		
+		/*
 		if (!tResponse.isMappingFileExist()) {
+			// there are no test cases written
 			// create testcase and checkin
-			ExcelUtil.createTestCaseAndCheckIn(tResponse.getTestInfoResponseList());
+			// ExcelUtil.createTestCaseAndCheckIn(tResponse.getTestInfoResponseList(),
+			// tResponse.getOrgId());
+			prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
 		} else {
+			for (Iterator<TestInfoResponse> iterator = tResponse.getTestInfoResponseList().iterator(); iterator
+					.hasNext();) {
+				TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+				String javaSrcFile = testInfoResponse.getMappingClassName() + ".java";
+				System.out.println(javaSrcFile);
+				String fileFound = FileSearch.getPath(javaSrcFile);
 
+				if (fileFound.equals("NotFound")) {
+					tResponse.setMappingFileExist(false);
+					// ExcelUtil.createMappingFileAndCheckIn(testInfoRequest.getOrgId(),
+					// testInfoRequest.getTestInfoId());
+					ExcelUtil.createMappingFileAndCheckIn(tResponse, git);
+				} else {
+					// read xls file from checkout folder testcases
+					// update response Objects with the data read from xls
+				}
+			}
 		}
+		*/
 		return tResponse.getTestInfoResponseList();
+	}
+
+	private void prepareJavaTestCases(List<TestInfoResponse> testResponseList, String fileName) {
+		String userName = "skrishna@infrascape.com";
+		String password = "Yarragsa@01";
+		String url = "https://github.com/saiinfra/CustomerTestProject.git";
+
+		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
+		File mappingFileWithPath = null;
+
+		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+			String className = testInfoResponse.getMappingClassName();
+			String ext = ".java";
+
+			try {
+				boolean testCaseExistsInExcel = FilleExcelWriter.doesScriptTestCaseExist(testInfoResponse, fileName);
+				if (testCaseExistsInExcel) {
+					// find if the Test class already exists 
+					// in client repository
+					String javaSrcFile = testInfoResponse.getMappingClassName() + ".java";
+					System.out.println(javaSrcFile);
+					String fileFound = FileSearch.getPath(javaSrcFile);
+					if (fileFound.equals("NotFound")) {
+						// create test case
+						FilleExcelWriter.createTestCaseFile(AppUtil.getCurrentPath(), className);
+						String sourcePath = AppUtil.getCurrentPath();
+						mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
+						RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
+					} 
+					else{
+						// do nothing
+					}
+				} else {
+					// do nothing
+					
+				}
+			} catch (TestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void init() {

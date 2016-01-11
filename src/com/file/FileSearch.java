@@ -8,18 +8,18 @@ import com.salesforce.util.Constants;
 
 public class FileSearch {
 
-	private String fileNameToSearch;
+	private static String fileNameToSearch;
 	private static List<String> result = new ArrayList<String>();
 	
 	
-	public String getFileNameToSearch() {
+	/*public String getFileNameToSearch() {
 		return fileNameToSearch;
 	}
 
-	public void setFileNameToSearch(String fileNameToSearch) {
-		this.fileNameToSearch = fileNameToSearch;
+	public static void setFileNameToSearch(String fileNameToSearch) {
+		fileNameToSearch = fileNameToSearch;
 	}
-
+*/
 	public static List<String> getResult() {
 		return result;
 	}
@@ -46,8 +46,9 @@ public class FileSearch {
 	public static String getPath(String fileName){
 		String path = "NotFound";
 		// try different directory and filename :)
+		result = new ArrayList<String>();
 		searchDirectory(new File(Constants.CheckoutFilePath), fileName);
-
+		
 		int count = getResult().size();
 		if (count == 0) {
 			System.out.println("\nNo result found!");
@@ -60,12 +61,12 @@ public class FileSearch {
 		}
 		return path;
 	}
-	public static void searchDirectory(File directory, String fileNameToSearch) {
+	
+	public static void searchDirectory(File directory, String fileName) {
 
-		//setFileNameToSearch(fileNameToSearch);
-
+		fileNameToSearch = fileName;
 		if (directory.isDirectory()) {
-			search(directory,fileNameToSearch);
+			search(directory,fileName);
 		} else {
 			System.out.println(directory.getAbsoluteFile() + " is not a directory!");
 		}
@@ -83,6 +84,7 @@ public class FileSearch {
 					if (temp.isDirectory()) {
 						search(temp, fileNameToSearch);
 					} else {
+						//System.out.println("fileNameToSearch: "+fileNameToSearch+" - temp.getName(): "+temp.getName());
 						if (fileNameToSearch.equals(temp.getName())) {
 							result.add(temp.getAbsoluteFile().toString());
 						}

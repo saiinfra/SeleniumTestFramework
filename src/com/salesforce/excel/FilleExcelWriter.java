@@ -96,7 +96,7 @@ public class FilleExcelWriter {
 		RepoUtil.CheckInChechputFolder(git, gitRepoDO);
 	}
 
-	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList) {
+	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList, String fileName) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -105,14 +105,20 @@ public class FilleExcelWriter {
 		File mappingFileWithPath = null;
 
 		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testResponse = (TestInfoResponse) iterator.next();
-			String className = testResponse.getMappingClassName();
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+			String className = testInfoResponse.getMappingClassName();
 			String ext = ".java";
-			if (!testResponse.isExcelRecordExists()) {
-				createTestCaseFile(AppUtil.getCurrentPath(), className);
-				String sourcePath = AppUtil.getCurrentPath();
-				mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
-				RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
+			
+			try {
+				if (!doesScriptTestCaseExist(testInfoResponse, fileName)) {
+					createTestCaseFile(AppUtil.getCurrentPath(), className);
+					String sourcePath = AppUtil.getCurrentPath();
+					mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
+					RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
+				}
+			} catch (TestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -353,7 +359,7 @@ public class FilleExcelWriter {
 		return false;
 	}
 
-	private static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName) throws TestException {
+	public static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName) throws TestException {
 		boolean recordExistsInFile = false;
 		File file = new File(
 				Constants.MappingFilePath + Constants.DirSeperator + fileName + Constants.MappingFileType);
@@ -398,6 +404,7 @@ public class FilleExcelWriter {
 							&& (testInfoResponse.getTitle().trim().equals(title.trim()))
 							&& (testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim()))) {
 						recordExistsInFile = true;
+						break;
 					}
 				}
 			} else {
@@ -573,7 +580,7 @@ public class FilleExcelWriter {
 
 	}
 
-	private static void createTestCaseFile(String targetPath, String className) {
+	public static void createTestCaseFile(String targetPath, String className) {
 		File mappingFile = new File(targetPath, className);
 		if (!mappingFile.exists()) {
 			try {
