@@ -177,6 +177,8 @@ public abstract class TestPreProcessingTemplate {
 			Files.copy(Paths.get(source.getPath()),
 					Paths.get(target.getPath()),
 					StandardCopyOption.COPY_ATTRIBUTES);
+		} catch(FileAlreadyExistsException e) {
+    			//destination file already exists
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
