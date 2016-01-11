@@ -93,7 +93,7 @@ public abstract class TestPostProcessingTemplate {
 			numberOfTestFail = result.getFailureCount();
 			numberOfTestIgnore = result.getIgnoreCount();
 
-			if(!tResponse.isDoesMappingFileExist()){
+			if(!tResponse.isMappingFileExist()){
 				resultInformationDO.setType("Automate java test scripts are created. please update to execute.");
 			}
 			if (numberOfTestFail > 0) {

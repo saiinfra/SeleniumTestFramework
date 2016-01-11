@@ -153,16 +153,12 @@ public class FilleExcelWriter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Row row1 = sheet.createRow(rows);
+		// Row row1 = sheet.createRow(rows);
 		List<TestInfoResponse> testInfoResponseList = tResponse.getTestInfoResponseList();
 
-		int currPointer = 0;
-
-		for (Iterator iterator = testInfoResponseList.iterator(); iterator.hasNext();) {
-			currPointer++;
-
+		for (Iterator<TestInfoResponse> iterator = testInfoResponseList.iterator(); iterator.hasNext();) {
 			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
-
+			Row row1 = sheet.createRow(++rows);
 			Cell cell = row1.createCell(0);
 			cell.setCellValue(testInfoResponse.getApplication());
 			cell = row1.createCell(1);
@@ -182,12 +178,18 @@ public class FilleExcelWriter {
 			String path = Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId()
 					+ Constants.MappingFileType;
 
-			try (FileOutputStream outputStream = new FileOutputStream(path)) {
-				workbook.write(outputStream);
-			} catch (Exception e) {
+			try {
+				if (!doesScriptTestCaseExist(testInfoResponse, tResponse.getOrgId())) {
+					try (FileOutputStream outputStream = new FileOutputStream(path)) {
+						workbook.write(outputStream);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (TestException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 
@@ -207,11 +209,10 @@ public class FilleExcelWriter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Row row1 = sheet.createRow(rows);
-
-		int rowCount = 1;
+		// Row row1 = sheet.createRow(rows);
 		for (Iterator iterator = tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
 			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+			Row row1 = sheet.createRow(++rows);
 			Cell cell = row1.createCell(0);
 			cell.setCellValue(testInfoResponse.getApplication());
 			cell = row1.createCell(1);
@@ -352,10 +353,10 @@ public class FilleExcelWriter {
 		return false;
 	}
 
-	public static void doesScriptTestCaseExist(List<TestInfoResponse> initialTestResponseList, String fileName)
-			throws TestException {
-		// List<TestInfoResponse> dObjList = null;
-		File file = new File(Constants.CheckoutPath + Constants.DirSeperator + fileName);
+	private static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName) throws TestException {
+		boolean recordExistsInFile = false;
+		File file = new File(
+				Constants.MappingFilePath + Constants.DirSeperator + fileName + Constants.MappingFileType);
 
 		try {
 			// Get the workbook instance for XLS file
@@ -392,19 +393,12 @@ public class FilleExcelWriter {
 
 					cell = row.getCell(3);
 					String testScriptId = cell.getStringCellValue();
-
-					cell = row.getCell(4);
-					String scriptStepName = cell.getStringCellValue();
-
-					cell = row.getCell(5);
-					String status = cell.getStringCellValue();
-
-					cell = row.getCell(6);
-					String path = cell.getStringCellValue();
-
-					cell = row.getCell(7);
-					String mappingClassName = cell.getStringCellValue();
-					updateIfExists(initialTestResponseList, testScriptId, mappingClassName);
+					if ((testInfoResponse.getApplication().trim().equals(application.trim()))
+							&& (testInfoResponse.getModule().trim().equals(module.trim()))
+							&& (testInfoResponse.getTitle().trim().equals(title.trim()))
+							&& (testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim()))) {
+						recordExistsInFile = true;
+					}
 				}
 			} else {
 				// no rows in excel
@@ -416,7 +410,6 @@ public class FilleExcelWriter {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		} catch (IOException e) {
 			try {
 				throw new TestException("IOException");
@@ -426,6 +419,7 @@ public class FilleExcelWriter {
 			}
 
 		}
+		return recordExistsInFile;
 	}
 
 	public static List<TestInfoResponse> readFile(File mappingFile, TestResponse tResponse) throws TestException {
@@ -498,7 +492,7 @@ public class FilleExcelWriter {
 								&& (testInfoResponse.getTestScriptId().equals(testScriptId))) {
 							testInfoResponse.setPath(path);
 							testInfoResponse.setMappingClassName(mappingClassName);
-							testInfoResponse.setStatus(Constants.ReadyForExecution);
+							// testInfoResponse.setStatus(Constants.ReadyForExecution);
 							testInfoResponse.setExcelRecordExists(true);
 						}
 

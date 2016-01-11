@@ -64,7 +64,7 @@ public abstract class TestPreProcessingTemplate {
 		String fileFound = FileSearch.getPath(mappingFileNameWithExt);
 
 		if (fileFound.equals("NotFound")) {
-			tResponse.setDoesMappingFileExist(false);
+			tResponse.setMappingFileExist(false);
 			// ExcelUtil.createMappingFileAndCheckIn(testInfoRequest.getOrgId(),
 			// testInfoRequest.getTestInfoId());
 			ExcelUtil.createMappingFileAndCheckIn(tResponse, git);
@@ -73,27 +73,21 @@ public abstract class TestPreProcessingTemplate {
 			// update response Objects with the data read from xls
 			File file = new File(Constants.CheckoutPath + Constants.DirSeperator + mappingFileNameWithExt);
 			ExcelUtil.readMappingFileAndSyncWithSF(file, tResponse);
-			for (Iterator iterator = tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
-				TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
-				if(!testInfoResponse.isExcelRecordExists()){
-					ExcelUtil.updateMappingFileAndCheckIn(tResponse, git);
-					tResponse.setDoesMappingFileExist(true);
-				}
-			}
+			tResponse.setMappingFileExist(true);
+			ExcelUtil.updateMappingFileAndCheckIn(tResponse, git);
 		}
-		
+
 	}
 
 	public List<TestInfoResponse> doPreProcessing1(String inputTokens, TestResponse tResponse) {
 		prepareRequest(inputTokens, tResponse);
 		Git git = checkOutCustomerProject(tResponse);
 		inspectMappingFile(git, tResponse);
-		if (!tResponse.isDoesMappingFileExist()) {
+		if (!tResponse.isMappingFileExist()) {
 			// create testcase and checkin
 			ExcelUtil.createTestCaseAndCheckIn(tResponse.getTestInfoResponseList());
-		}
-		else{
-			
+		} else {
+
 		}
 		return tResponse.getTestInfoResponseList();
 	}

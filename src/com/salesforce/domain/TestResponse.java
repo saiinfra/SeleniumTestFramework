@@ -6,7 +6,7 @@ public class TestResponse {
 
 	List<TestInfoResponse> testInfoResponseList;
 	boolean areTestClassesModified;
-	boolean doesMappingFileExist;
+	boolean mappingFileExist;
 	TestInformationDO testInformationDO;
 	
 	String orgId;
@@ -27,12 +27,12 @@ public class TestResponse {
 		this.areTestClassesModified = areTestClassesModified;
 	}
 
-	public boolean isDoesMappingFileExist() {
-		return doesMappingFileExist;
+	public boolean isMappingFileExist() {
+		return mappingFileExist;
 	}
 
-	public void setDoesMappingFileExist(boolean doesMappingFileExist) {
-		this.doesMappingFileExist = doesMappingFileExist;
+	public void setMappingFileExist(boolean mappingFileExist) {
+		this.mappingFileExist = mappingFileExist;
 	}
 
 	public String getOrgId() {
