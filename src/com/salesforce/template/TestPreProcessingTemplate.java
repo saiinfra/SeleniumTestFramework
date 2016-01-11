@@ -144,9 +144,11 @@ public abstract class TestPreProcessingTemplate {
 						String sourcePath = AppUtil.getCurrentPath();
 						mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
 						RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
+						copyFiles(className+ext);
 					} 
 					else{
 						// do nothing
+						copyFiles(className+ext);
 					}
 				} else {
 					// do nothing
@@ -163,7 +165,21 @@ public abstract class TestPreProcessingTemplate {
 		// String inputTokens = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 		// doPreProcessing1(inputTokens);
 	}
-
+	
+	private void copyFiles(String fileName){
+		
+		File source = new File(Constants.CheckoutFilePath +Constants.DirSeperator+Constants.JavaSourcePath+Constants.DirSeperator+fileName);
+		File target = new File(AppUtil.getCurrentPath()+Constants.DirSeperator+Constants.JavaSourcePath+Constants.DirSeperator+fileName);
+		try {
+			Files.copy(Paths.get(source.getPath()),
+					Paths.get(target.getPath()),
+					StandardCopyOption.COPY_ATTRIBUTES);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private TestInfoRequest readInputTokensInto(String inputTokens) {
 		StringTokenizer st = new StringTokenizer(inputTokens, "~");
 		TestInfoRequest testInfoRequest = new TestInfoRequest();
