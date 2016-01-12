@@ -6,14 +6,8 @@
 	<property name="lib" location="lib" />
 	<property name="reports" location="reports" />
 
-	<target name="init" depends="clean">
-		<mkdir dir="${build}" />
-		<mkdir dir="${reports}" />
-		<mkdir dir="${reports}/raw/" />
-		<mkdir dir="${reports}/html/" /> 
-	</target>
 
-	<target name="compile" depends="init">
+	<target name="compile" depends="">
 		<javac srcdir="${src}" destdir="${build}" description="compile the source code ">
 			<classpath>
 				<fileset dir="lib">
@@ -22,13 +16,6 @@
 			</classpath>
 		</javac>
 	</target>
-
-	<target name="clean">
-		<delete dir="${build}" />
-		<delete dir="${reports}" />
-	</target>
-
-
 
 	<target name="run-tests" depends="compile">
 		<property name="testparam" value="RunSalesForceTestSuite" />
@@ -59,10 +46,8 @@
 		</junitreport>
 	</target>
 
-	<target name="all2" depends="clean, test" />
-
 	<target name="all1" depends="compile">
-		<property name="testparam" value="" />
+		<property name="testparam" value="a0361000005afyrAAA~00D61000000fBw4~T_0000000034" />
 		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
