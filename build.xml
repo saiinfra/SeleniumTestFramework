@@ -8,7 +8,7 @@
 
 
 	<target name="compile" depends="">
-		<javac srcdir="${src}" destdir="${build}" description="compile the source code ">
+		<javac srcdir="${src}" destdir="${build}" description="compile the source">
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
