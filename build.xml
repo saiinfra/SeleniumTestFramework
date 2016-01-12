@@ -2,6 +2,7 @@
 <project name="Ant Example" default="" basedir=".">
 	<property name="project_name" value="Selenium_Test" />
 	<property name="src" location="src" />
+	<property name="bin" location="bin" />
 	<property name="build" location="build/classes" />
 	<property name="lib" location="lib" />
 	<property name="reports" location="reports" />
@@ -14,7 +15,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="${src}" destdir="${build}" description="compile the source code ">
+		<javac srcdir="${src}" destdir="${bin}" description="compile the source code ">
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -36,6 +37,7 @@
 		
 		<junit printsummary="on">
 			<classpath>
+				<pathelement path="${bin}" />
 				<pathelement path="${build}" />
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -68,6 +70,7 @@
 		<java classname="com.test.TestRunner">
 			<classpath>
 				<pathelement path="${build}" />
+				<pathelement path="${bin}" />
 				<fileset dir="lib">
 					<include name="**/*.jar" />
 				</fileset>
