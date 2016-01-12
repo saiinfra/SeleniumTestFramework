@@ -30,6 +30,21 @@ public abstract class TestPreProcessingTemplate {
 
 	public abstract List<TestInfoResponse> doPreProcessing(String inputTokens, TestResponse tResponse);
 
+	public List<TestInfoResponse> doPreProcessing1(String inputTokens, TestResponse tResponse) {
+		String userName = "skrishna@infrascape.com";
+		String password = "Yarragsa@01";
+		String url = "https://github.com/saiinfra/CustomerTestProject.git";
+
+		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
+		
+		prepareRequest(inputTokens, tResponse);
+		Git git = RepoUtil.checkOutCustomerProject(tResponse);
+		inspectMappingFile(git, tResponse);
+		prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
+		RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
+		return tResponse.getTestInfoResponseList();
+	}
+
 	private void prepareRequest(String inputTokens, TestResponse tResponse) {
 		// read input tokens
 		TestInfoRequest testInfoRequest = readInputTokensInto(inputTokens);
@@ -85,42 +100,6 @@ public abstract class TestPreProcessingTemplate {
 
 	}
 
-	public List<TestInfoResponse> doPreProcessing1(String inputTokens, TestResponse tResponse) {
-		prepareRequest(inputTokens, tResponse);
-		Git git = checkOutCustomerProject(tResponse);
-		inspectMappingFile(git, tResponse);
-		prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
-		
-		/*
-		if (!tResponse.isMappingFileExist()) {
-			// there are no test cases written
-			// create testcase and checkin
-			// ExcelUtil.createTestCaseAndCheckIn(tResponse.getTestInfoResponseList(),
-			// tResponse.getOrgId());
-			prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
-		} else {
-			for (Iterator<TestInfoResponse> iterator = tResponse.getTestInfoResponseList().iterator(); iterator
-					.hasNext();) {
-				TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
-				String javaSrcFile = testInfoResponse.getMappingClassName() + ".java";
-				System.out.println(javaSrcFile);
-				String fileFound = FileSearch.getPath(javaSrcFile);
-
-				if (fileFound.equals("NotFound")) {
-					tResponse.setMappingFileExist(false);
-					// ExcelUtil.createMappingFileAndCheckIn(testInfoRequest.getOrgId(),
-					// testInfoRequest.getTestInfoId());
-					ExcelUtil.createMappingFileAndCheckIn(tResponse, git);
-				} else {
-					// read xls file from checkout folder testcases
-					// update response Objects with the data read from xls
-				}
-			}
-		}
-		*/
-		return tResponse.getTestInfoResponseList();
-	}
-
 	private void prepareJavaTestCases(List<TestInfoResponse> testResponseList, String fileName) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
@@ -137,7 +116,7 @@ public abstract class TestPreProcessingTemplate {
 			try {
 				boolean testCaseExistsInExcel = FilleExcelWriter.doesScriptTestCaseExist(testInfoResponse, fileName);
 				if (testCaseExistsInExcel) {
-					// find if the Test class already exists 
+					// find if the Test class already exists
 					// in client repository
 					String javaSrcFile = testInfoResponse.getMappingClassName() + ".java";
 					System.out.println(javaSrcFile);
@@ -146,17 +125,18 @@ public abstract class TestPreProcessingTemplate {
 						// create test case
 						FilleExcelWriter.createTestCaseFile(AppUtil.getCurrentPath(), className);
 						String sourcePath = AppUtil.getCurrentPath();
-						mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
-						RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
-						copyFiles(className+ext);
-					} 
-					else{
+						mappingFileWithPath = new File(
+								AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
+						// RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
+						// mappingFileWithPath);
+						copyFilesToCustProj(className + ext);
+					} else {
 						// do nothing
-						copyFiles(className+ext);
+						// since java test cases are already available
 					}
 				} else {
 					// do nothing
-					
+
 				}
 			} catch (TestException e) {
 				// TODO Auto-generated catch block
@@ -169,23 +149,22 @@ public abstract class TestPreProcessingTemplate {
 		// String inputTokens = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 		// doPreProcessing1(inputTokens);
 	}
-	
-	private void copyFiles(String fileName){
-		
-		File source = new File(Constants.CheckoutFilePath +Constants.DirSeperator+Constants.JavaSourcePath+Constants.DirSeperator+fileName);
-		File target = new File(AppUtil.getCurrentPath()+Constants.DirSeperator+Constants.JavaSourcePath+Constants.DirSeperator+fileName);
+
+	private void copyFilesToCustProj(String fileName) {
+
+		File target = new File(Constants.CheckoutFilePath + Constants.DirSeperator + Constants.JavaSourcePath
+				+ Constants.DirSeperator + fileName);
+		File source = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileName);
 		try {
-			Files.copy(Paths.get(source.getPath()),
-					Paths.get(target.getPath()),
-					StandardCopyOption.COPY_ATTRIBUTES);
-		} catch(FileAlreadyExistsException e) {
-    			//destination file already exists
+			Files.copy(Paths.get(source.getPath()), Paths.get(target.getPath()), StandardCopyOption.COPY_ATTRIBUTES);
+		} catch (FileAlreadyExistsException e) {
+			// destination file already exists
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	private TestInfoRequest readInputTokensInto(String inputTokens) {
 		StringTokenizer st = new StringTokenizer(inputTokens, "~");
 		TestInfoRequest testInfoRequest = new TestInfoRequest();

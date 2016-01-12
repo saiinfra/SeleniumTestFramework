@@ -9,9 +9,12 @@ public class CreateFileUtil {
 	private static StringBuffer sb = null;
 
 	public static void prepareJavaTestFile(String fileName) {
+		FileWriter fw = null;
+		File file = null;
+		BufferedWriter bw = null;
 		try {
 			sb = new StringBuffer();
-			File file = new File(AppUtil.getCurrentPath()
+			file = new File(AppUtil.getCurrentPath()
 					+ Constants.DirSeperator + fileName + ".java");
 
 			System.out.println(file.getPath());
@@ -22,14 +25,24 @@ public class CreateFileUtil {
 				file.delete();
 			}
 			writeImports();
+			System.out.println("");
 			writeJavaFileName(fileName);
 			writeEmptyJavaTemplateClass();
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
+			fw = new FileWriter(file.getAbsoluteFile());
+			bw = new BufferedWriter(fw);
 			bw.write(sb.toString());
-			bw.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally{
+			try {
+				fw.flush();
+				bw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

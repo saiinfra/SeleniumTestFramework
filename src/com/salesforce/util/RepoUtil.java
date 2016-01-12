@@ -11,6 +11,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import com.salesforce.domain.GitRepoDO;
+import com.salesforce.domain.TestResponse;
 
 public class RepoUtil {
 
@@ -85,7 +86,7 @@ public class RepoUtil {
 		RepoClass.commit(git, gitRepoDO);
 	}
 	
-	public static void CheckInChechputFolder(Git git, GitRepoDO gitRepoDO) {
+	public static void CheckInCheckoutFolder(Git git, GitRepoDO gitRepoDO) {
 		try {
 			RepoClass.addFile(git);
 		} catch (IOException | GitAPIException e) {
@@ -105,6 +106,15 @@ public class RepoUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return git;
+	}
+	
+	public static Git checkOutCustomerProject(TestResponse tResponse) {
+		File checkOutDir = new File(Constants.CheckoutPath1);
+		RepoClass.deleteDirectory(checkOutDir);
+
+		// checkout from git to find whether file exists or not
+		Git git = ExcelUtil.checkout(tResponse.getTestInformationDO().getExecutionURL());
 		return git;
 	}
 	

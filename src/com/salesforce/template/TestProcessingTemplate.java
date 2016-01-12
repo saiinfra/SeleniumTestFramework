@@ -17,9 +17,9 @@ public abstract class TestProcessingTemplate {
 	public Result doProcessing1() {
 		if (testInfoResponse != null && testInfoResponse.getMappingClassName() != ""
 				&& !testInfoResponse.getStatus().equals(Constants.Modified)) {
-			String fileFoundStr = FileSearch.getPath(testInfoResponse.getMappingClassName() + ".java");
-			System.out.println("fileFoundStr: " + fileFoundStr);
-			if (!fileFoundStr.equals("NotFound") && (testInfoResponse.getMappingClassName() != null
+			String fileFoundStr = FileSearch.searchCheckoutPath(testInfoResponse.getMappingClassName() + ".java");
+			System.out.println("fileFoundStr  : " + fileFoundStr);
+			if (fileFoundStr.equals("Found") && (testInfoResponse.getMappingClassName() != null
 					|| !testInfoResponse.getMappingClassName().isEmpty())) {
 				try {
 					//ExecShellScript.copyFile(fileFoundStr);

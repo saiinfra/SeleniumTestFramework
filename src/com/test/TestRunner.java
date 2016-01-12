@@ -15,6 +15,7 @@ import com.salesforce.template.FirstCustPostTemplate;
 import com.salesforce.template.FirstCustPreProcessTemplate;
 import com.salesforce.template.FirstCustProcessTemplate;
 import com.salesforce.util.AppUtil;
+import com.salesforce.util.RepoUtil;
 import com.salesforce.util.SFoAuthHandle;
 
 public class TestRunner {
@@ -50,7 +51,8 @@ public class TestRunner {
 		//String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
 		//String arg = "a0361000005aWPoAAM~00D61000000fBw4~T_0000000027";
 		//String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
-		String arg = "a0361000005aYgnAAE~00D61000000fBw4~T_0000000029";
+		//String arg = "a0361000005aYgnAAE~00D61000000fBw4~T_0000000029";
+		String arg = "a0361000005afyrAAA~00D61000000fBw4~T_0000000034";
 		
 		if (arg == null) { 
 			arg = "test"; 
@@ -63,9 +65,9 @@ public class TestRunner {
 		TestResponse tResponse = new TestResponse();
 		// pre-process
 		FirstCustPreProcessTemplate preProcessTemplate = new FirstCustPreProcessTemplate();
-		List<TestInfoResponse> testInfoResponselist = preProcessTemplate.doPreProcessing(inputTokens, tResponse);
+		preProcessTemplate.doPreProcessing(inputTokens, tResponse);
 
-		if ((testInfoResponselist == null)) {
+		if ((tResponse.getTestInfoResponseList() == null)) {
 			// post processing
 			FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(null, null, null);
 			firstCustPostTemplate.doPostProcessing(tResponse);
@@ -73,7 +75,7 @@ public class TestRunner {
 
 			String metadatLogId = SFDomainUtil.createEmptyMetadataLogId();
 			if (tResponse.isMappingFileExist()) {
-				for (Iterator iterator = testInfoResponselist.iterator(); iterator.hasNext();) {
+				for (Iterator<TestInfoResponse> iterator = tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
 					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
 					// processing
 					FirstCustProcessTemplate processTemplate = new FirstCustProcessTemplate(testInfoResponse);
@@ -86,7 +88,7 @@ public class TestRunner {
 				}
 			}
 			else{
-				for (Iterator iterator = testInfoResponselist.iterator(); iterator.hasNext();) {
+				for (Iterator<TestInfoResponse> iterator =  tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
 					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
 					// processing
 					FirstCustProcessTemplate postProcessTemplate = new FirstCustProcessTemplate(testInfoResponse);

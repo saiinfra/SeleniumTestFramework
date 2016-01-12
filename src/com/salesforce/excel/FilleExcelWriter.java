@@ -93,7 +93,7 @@ public class FilleExcelWriter {
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
 		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
 		writeExtraRows(tResponse);
-		RepoUtil.CheckInChechputFolder(git, gitRepoDO);
+		// RepoUtil.CheckInChechputFolder(git, gitRepoDO);
 	}
 
 	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList, String fileName) {
@@ -108,7 +108,7 @@ public class FilleExcelWriter {
 			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
 			String className = testInfoResponse.getMappingClassName();
 			String ext = ".java";
-			
+
 			try {
 				if (!doesScriptTestCaseExist(testInfoResponse, fileName)) {
 					createTestCaseFile(AppUtil.getCurrentPath(), className);
@@ -359,10 +359,10 @@ public class FilleExcelWriter {
 		return false;
 	}
 
-	public static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName) throws TestException {
+	public static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName)
+			throws TestException {
 		boolean recordExistsInFile = false;
-		File file = new File(
-				Constants.MappingFilePath + Constants.DirSeperator + fileName + Constants.MappingFileType);
+		File file = new File(Constants.MappingFilePath + Constants.DirSeperator + fileName + Constants.MappingFileType);
 
 		try {
 			// Get the workbook instance for XLS file
@@ -460,36 +460,65 @@ public class FilleExcelWriter {
 					if (cell == null) {
 						// do nothing
 					}
-					String application = cell.getStringCellValue();
-					dObj.setApplication(application);
+					String application = "";
+					if (cell != null) {
+						application = cell.getStringCellValue();
+						dObj.setApplication(application);
+					}
 
 					cell = row.getCell(1);
-					String module = cell.getStringCellValue();
+					String module = "";
+					if (cell != null) {
+						module = cell.getStringCellValue();
+					}
 					dObj.setModule(module);
 
 					cell = row.getCell(2);
-					String title = cell.getStringCellValue();
+					String title = "";
+					if (cell != null) {
+						title = cell.getStringCellValue();
+					}
 					dObj.setTitle(title);
 
-					cell = row.getCell(3);
-					String testScriptId = cell.getStringCellValue();
+					if (cell != null) {
+						cell = row.getCell(3);
+					}
+					String testScriptId = "";
+					if (cell != null) {
+						testScriptId = cell.getStringCellValue();
+					}
 					dObj.setTestScriptId(testScriptId);
 
 					cell = row.getCell(4);
-					String scriptStepName = cell.getStringCellValue();
+					String scriptStepName = "";
+					if (cell != null) {
+						scriptStepName = cell.getStringCellValue();
+					}
 					dObj.setTestScriptName(scriptStepName);
 
 					cell = row.getCell(5);
-					String status = cell.getStringCellValue();
+					String status = "";
+					if (cell != null) {
+						status = cell.getStringCellValue();
+					}
 					dObj.setStatus(status);
 
 					cell = row.getCell(6);
-					String path = cell.getStringCellValue();
+					String path = null;
+					if (cell != null) {
+						path = cell.getStringCellValue();
+					} else {
+						path = "";
+					}
 					dObj.setPath(path);
 
 					cell = row.getCell(7);
-					String mappingClassName = cell.getStringCellValue();
+					String mappingClassName = "";
+					if (cell != null) {
+						mappingClassName = cell.getStringCellValue();
+					}
 					dObj.setMappingClassName(mappingClassName);
+
 					tInfoResList.add(dObj);
 					for (Iterator iterator = intialResonseList.iterator(); iterator.hasNext();) {
 						TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();

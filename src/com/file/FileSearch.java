@@ -62,6 +62,26 @@ public class FileSearch {
 		return path;
 	}
 	
+	public static String searchCheckoutPath(String fileName){
+		String path = "NotFound";
+		// try different directory and filename :)
+		result = new ArrayList<String>();
+		searchDirectory(new File(Constants.CheckoutFilePath), fileName);
+		
+		int count = getResult().size();
+		if (count == 0) {
+			System.out.println("\nNo result found!");
+		} else {
+			System.out.println("\nFound " + count + " result!\n");
+			for (String matched : getResult()) {
+				System.out.println("Found : " + matched);
+				path =  matched;
+				path="Found";
+			}
+		}
+		return path;
+	}
+	
 	public static void searchDirectory(File directory, String fileName) {
 
 		fileNameToSearch = fileName;
