@@ -62,7 +62,7 @@
 	<target name="all2" depends="clean, test" />
 
 	<target name="all1" depends="compile">
-		<property name="testparam" value="RunSalesForceTestSuite" />
+		<property name="testparam" value="" />
 		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
