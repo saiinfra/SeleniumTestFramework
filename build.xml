@@ -47,7 +47,7 @@
 	</target>
 
 	<target name="all1" depends="compile">
-		<property name="testparam" value="a0361000005afyrAAA~00D61000000fBw4~T_0000000034" />
+		<property name="testparam" value="" />
 		<echo> Running test class ${testparam}......... </echo>
 
 		<java classname="com.test.TestRunner">
