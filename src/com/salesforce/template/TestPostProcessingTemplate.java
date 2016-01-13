@@ -99,8 +99,9 @@ public abstract class TestPostProcessingTemplate {
 			if (numberOfTestFail > 0) {
 
 				for (Failure failure : result.getFailures()) {
-					resultInformationDO.setType(failure.toString());
-					System.out.println(failure.toString());
+					String message = failure.getMessage().substring(0, 254);
+					resultInformationDO.setType(failure.getMessage().substring(0, 254));
+					System.out.println("Error message: "+message);
 				}
 				resultInformationDO.setStatus("failure");
 				resultInformationDO.setTestcasename(testcasename);
