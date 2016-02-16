@@ -25,9 +25,10 @@ public class TestScriptsDAO {
 				for (int i = 0; i < queryResults.getRecords().length; i++) {
 					test_Script__c = (com.sforce.soap.enterprise.sobject.Test_Script__c) queryResults
 							.getRecords()[i];
-
 					testScriptsDO = new TestScriptsDO(test_Script__c.getId(),
-							test_Script__c.getName(), test_Script__c.getTest_Steps__c(), test_Script__c.getScript_Status__c());
+							test_Script__c.getName(),
+							test_Script__c.getTest_Steps__c(),
+							test_Script__c.getScript_Status__c());
 
 					System.out.println(" - Name: " + test_Script__c.getName());
 
@@ -42,7 +43,7 @@ public class TestScriptsDAO {
 		}
 		return list;
 	}
-	
+
 	public List<Object> findByScriptName(String scriptname,
 			SFoAuthHandle sfHandle) {
 		com.sforce.soap.enterprise.sobject.Test_Script__c test_Script__c = null;
@@ -59,7 +60,9 @@ public class TestScriptsDAO {
 							.getRecords()[i];
 
 					testScriptsDO = new TestScriptsDO(test_Script__c.getId(),
-							test_Script__c.getName(), test_Script__c.getTest_Steps__c(), test_Script__c.getScript_Status__c());
+							test_Script__c.getName(),
+							test_Script__c.getTest_Steps__c(),
+							test_Script__c.getScript_Status__c());
 
 					System.out.println(" - Name: " + test_Script__c.getName());
 
@@ -74,6 +77,5 @@ public class TestScriptsDAO {
 		}
 		return list;
 	}
-
 
 }

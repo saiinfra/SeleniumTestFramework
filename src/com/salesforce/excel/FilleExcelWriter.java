@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.eclipse.jgit.api.Git;
 
+import com.salesforce.domain.ActivityDetailsDO;
 import com.salesforce.domain.GitRepoDO;
 import com.salesforce.domain.SFDomainUtil;
 import com.salesforce.domain.TestInfoResponse;
@@ -41,6 +42,7 @@ public class FilleExcelWriter {
 	// private static String ext = ".xls";
 	private static Workbook workbook;
 	private static Sheet sheet;
+	public static List<Object> activityDetailsDO = null;
 
 	public static void main(String[] args) {
 		fileName = "00D61000000fBw2";
@@ -48,7 +50,8 @@ public class FilleExcelWriter {
 		createMappingFileAndCheckIn(fileName, testInfoId);
 	}
 
-	public static void createMappingFileAndCheckIn(String fileName, String testInfoId) {
+	public static void createMappingFileAndCheckIn(String fileName,
+			String testInfoId) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -56,16 +59,19 @@ public class FilleExcelWriter {
 		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
 		String fileNameWithExt = fileName + Constants.MappingFileType;
 
-		createTestScriptMappingFile(AppUtil.getCurrentPath(), fileNameWithExt, testInfoId);
+		createTestScriptMappingFile(AppUtil.getCurrentPath(), fileNameWithExt,
+				testInfoId);
 		// String fileNameWithPathExt = AppUtil.getCurrentPath() +
 		// Constants.DirSeperator+fileNameWithExt;
 		String sourcePath = AppUtil.getCurrentPath();
 
-		File mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileNameWithExt);
+		File mappingFileWithPath = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + fileNameWithExt);
 		RepoUtil.CheckIn(gitRepoDO, sourcePath, mappingFileWithPath);
 	}
 
-	public static void createMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+	public static void createMappingFileAndCheckIn(TestResponse tResponse,
+			Git git) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -83,11 +89,13 @@ public class FilleExcelWriter {
 		// Constants.DirSeperator+fileNameWithExt;
 		String sourcePath = AppUtil.getCurrentPath();
 
-		File mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileNameWithExt);
+		File mappingFileWithPath = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + fileNameWithExt);
 		RepoUtil.CheckIn(git, gitRepoDO);
 	}
 
-	public static void updateMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+	public static void updateMappingFileAndCheckIn(TestResponse tResponse,
+			Git git) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -96,7 +104,9 @@ public class FilleExcelWriter {
 		// RepoUtil.CheckInChechputFolder(git, gitRepoDO);
 	}
 
-	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList, String fileName) {
+	public static void createTestCaseAndCheckIn(
+			List<TestInfoResponse> testResponseList, String fileName,
+			List<Object> activityDetailsDO) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -104,17 +114,23 @@ public class FilleExcelWriter {
 		GitRepoDO gitRepoDO = new GitRepoDO(userName, password, url);
 		File mappingFileWithPath = null;
 
-		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator
+				.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			String className = testInfoResponse.getMappingClassName();
 			String ext = ".java";
 
 			try {
-				if (!doesScriptTestCaseExist(testInfoResponse, fileName)) {
-					createTestCaseFile(AppUtil.getCurrentPath(), className);
+				if (!doesScriptTestCaseExist(testInfoResponse, fileName,
+						activityDetailsDO)) {
+					createTestCaseFile(AppUtil.getCurrentPath(), className,
+							testInfoResponse, activityDetailsDO);
 					String sourcePath = AppUtil.getCurrentPath();
-					mappingFileWithPath = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
-					RepoUtil.CheckInSrc(gitRepoDO, sourcePath, mappingFileWithPath);
+					mappingFileWithPath = new File(AppUtil.getCurrentPath()
+							+ Constants.DirSeperator + className + ext);
+					RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
+							mappingFileWithPath);
 				}
 			} catch (TestException e) {
 				// TODO Auto-generated catch block
@@ -123,7 +139,8 @@ public class FilleExcelWriter {
 		}
 	}
 
-	public static void writeExcel(List<Object> listBook, String excelFilePath, String testInfoId) throws IOException {
+	public static void writeExcel(List<Object> listBook, String excelFilePath,
+			String testInfoId) throws IOException {
 
 		workbook = new HSSFWorkbook();
 		sheet = workbook.createSheet();
@@ -147,8 +164,8 @@ public class FilleExcelWriter {
 		HSSFSheet sheet = null;
 
 		int rows = 0;
-		File file = new File(
-				Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId() + Constants.MappingFileType);
+		File file = new File(Constants.MappingFilePath + Constants.DirSeperator
+				+ tResponse.getOrgId() + Constants.MappingFileType);
 
 		try {
 			// Get the workbook instance for XLS file
@@ -160,10 +177,13 @@ public class FilleExcelWriter {
 			e.printStackTrace();
 		}
 		// Row row1 = sheet.createRow(rows);
-		List<TestInfoResponse> testInfoResponseList = tResponse.getTestInfoResponseList();
+		List<TestInfoResponse> testInfoResponseList = tResponse
+				.getTestInfoResponseList();
 
-		for (Iterator<TestInfoResponse> iterator = testInfoResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+		for (Iterator<TestInfoResponse> iterator = testInfoResponseList
+				.iterator(); iterator.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			Row row1 = sheet.createRow(++rows);
 			Cell cell = row1.createCell(0);
 			cell.setCellValue(testInfoResponse.getApplication());
@@ -181,12 +201,14 @@ public class FilleExcelWriter {
 			cell.setCellValue(testInfoResponse.getPath());
 			cell = row1.createCell(7);
 			cell.setCellValue(testInfoResponse.getMappingClassName());
-			String path = Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId()
-					+ Constants.MappingFileType;
+			String path = Constants.MappingFilePath + Constants.DirSeperator
+					+ tResponse.getOrgId() + Constants.MappingFileType;
 
 			try {
-				if (!doesScriptTestCaseExist(testInfoResponse, tResponse.getOrgId())) {
-					try (FileOutputStream outputStream = new FileOutputStream(path)) {
+				if (!doesScriptTestCaseExist(testInfoResponse,
+						tResponse.getOrgId(), activityDetailsDO)) {
+					try (FileOutputStream outputStream = new FileOutputStream(
+							path)) {
 						workbook.write(outputStream);
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -203,8 +225,8 @@ public class FilleExcelWriter {
 		workbook = new HSSFWorkbook();
 		sheet = workbook.createSheet();
 		int rows = 0;
-		File file = new File(
-				Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId() + Constants.MappingFileType);
+		File file = new File(Constants.MappingFilePath + Constants.DirSeperator
+				+ tResponse.getOrgId() + Constants.MappingFileType);
 
 		try {
 			// Get the workbook instance for XLS file
@@ -216,8 +238,10 @@ public class FilleExcelWriter {
 			e.printStackTrace();
 		}
 		// Row row1 = sheet.createRow(rows);
-		for (Iterator iterator = tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+		for (Iterator iterator = tResponse.getTestInfoResponseList().iterator(); iterator
+				.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			Row row1 = sheet.createRow(++rows);
 			Cell cell = row1.createCell(0);
 			cell.setCellValue(testInfoResponse.getApplication());
@@ -241,8 +265,8 @@ public class FilleExcelWriter {
 			cell = row1.createCell(7);
 			cell.setCellValue(testInfoResponse.getMappingClassName());
 
-			String path = Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId()
-					+ Constants.MappingFileType;
+			String path = Constants.MappingFilePath + Constants.DirSeperator
+					+ tResponse.getOrgId() + Constants.MappingFileType;
 
 			try (FileOutputStream outputStream = new FileOutputStream(path)) {
 				workbook.write(outputStream);
@@ -253,7 +277,8 @@ public class FilleExcelWriter {
 		}
 	}
 
-	public static void writeExcelHeader(TestResponse tResponse) throws IOException {
+	public static void writeExcelHeader(TestResponse tResponse)
+			throws IOException {
 
 		workbook = new HSSFWorkbook();
 		sheet = workbook.createSheet();
@@ -279,8 +304,8 @@ public class FilleExcelWriter {
 		cell = row1.createCell(7);
 		cell.setCellValue("ClassName");
 
-		String path = Constants.MappingFilePath + Constants.DirSeperator + tResponse.getOrgId()
-				+ Constants.MappingFileType;
+		String path = Constants.MappingFilePath + Constants.DirSeperator
+				+ tResponse.getOrgId() + Constants.MappingFileType;
 
 		try (FileOutputStream outputStream = new FileOutputStream(path)) {
 			workbook.write(outputStream);
@@ -289,15 +314,18 @@ public class FilleExcelWriter {
 		}
 	}
 
-	private static void writeTescripts(TestScriptsDO testScripts, Row row, String testInfoId) {
+	private static void writeTescripts(TestScriptsDO testScripts, Row row,
+			String testInfoId) {
 
 		List<Object> testInformationlist = null;
 
-		testInformationlist = findTestInformation(testInfoId, SalesForceUtil.getSFHandle());
+		testInformationlist = findTestInformation(testInfoId,
+				SalesForceUtil.getSFHandle());
 
 		for (int i = 0; i < testInformationlist.size(); i++) {
 
-			TestInformationDO t = (TestInformationDO) testInformationlist.get(i);
+			TestInformationDO t = (TestInformationDO) testInformationlist
+					.get(i);
 			Cell cell = row.createCell(0);
 			cell.setCellValue(t.getApplication());
 			cell = row.createCell(1);
@@ -327,30 +355,41 @@ public class FilleExcelWriter {
 		 */
 	}
 
-	private static List<Object> findTestInformation(String testinformationid, SFoAuthHandle sfHandle) {
+	private static List<Object> findTestInformation(String testinformationid,
+			SFoAuthHandle sfHandle) {
 
 		TestInformationDAO testInformationDAO = new TestInformationDAO();
-		List<Object> list = testInformationDAO.findById(testinformationid, sfHandle);
+		List<Object> list = testInformationDAO.findById(testinformationid,
+				sfHandle);
 		return list;
 	}
 
-	public static void updateIfExists(List<TestInfoResponse> initialTestResponseList, String testScriptId,
-			String mappingClassName) throws TestException {
-		for (Iterator iterator = initialTestResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+	public static void updateIfExists(
+			List<TestInfoResponse> initialTestResponseList,
+			String testScriptId, String mappingClassName) throws TestException {
+		for (Iterator iterator = initialTestResponseList.iterator(); iterator
+				.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			String str = testInfoResponse.getTestScriptId();
-			if (testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim())) {
+			if (testInfoResponse.getTestScriptId().trim()
+					.equals(testScriptId.trim())) {
 				testInfoResponse.setMappingClassName(mappingClassName);
 			}
 		}
 	}
 
-	public static boolean doesTestCaseExists(List<TestInfoResponse> initialTestResponseList, String testScriptId)
+	public static boolean doesTestCaseExists(
+			List<TestInfoResponse> initialTestResponseList,
+			String testScriptId, List<Object> activityDetailsDO)
 			throws TestException {
-		for (Iterator iterator = initialTestResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+		for (Iterator iterator = initialTestResponseList.iterator(); iterator
+				.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			String str = testInfoResponse.getTestScriptId();
-			if (testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim())) {
+			if (testInfoResponse.getTestScriptId().trim()
+					.equals(testScriptId.trim())) {
 				return true;
 			} else {
 				return false;
@@ -359,10 +398,12 @@ public class FilleExcelWriter {
 		return false;
 	}
 
-	public static boolean doesScriptTestCaseExist(TestInfoResponse testInfoResponse, String fileName)
-			throws TestException {
+	public static boolean doesScriptTestCaseExist(
+			TestInfoResponse testInfoResponse, String fileName,
+			List<Object> activityDetailsDO) throws TestException {
 		boolean recordExistsInFile = false;
-		File file = new File(Constants.MappingFilePath + Constants.DirSeperator + fileName + Constants.MappingFileType);
+		File file = new File(Constants.MappingFilePath + Constants.DirSeperator
+				+ fileName + Constants.MappingFileType);
 
 		try {
 			// Get the workbook instance for XLS file
@@ -399,10 +440,14 @@ public class FilleExcelWriter {
 
 					cell = row.getCell(3);
 					String testScriptId = cell.getStringCellValue();
-					if ((testInfoResponse.getApplication().trim().equals(application.trim()))
-							&& (testInfoResponse.getModule().trim().equals(module.trim()))
-							&& (testInfoResponse.getTitle().trim().equals(title.trim()))
-							&& (testInfoResponse.getTestScriptId().trim().equals(testScriptId.trim()))) {
+					if ((testInfoResponse.getApplication().trim()
+							.equals(application.trim()))
+							&& (testInfoResponse.getModule().trim()
+									.equals(module.trim()))
+							&& (testInfoResponse.getTitle().trim().equals(title
+									.trim()))
+							&& (testInfoResponse.getTestScriptId().trim()
+									.equals(testScriptId.trim()))) {
 						recordExistsInFile = true;
 						break;
 					}
@@ -429,14 +474,17 @@ public class FilleExcelWriter {
 		return recordExistsInFile;
 	}
 
-	public static List<TestInfoResponse> readFile(File mappingFile, TestResponse tResponse) throws TestException {
+	public static List<TestInfoResponse> readFile(File mappingFile,
+			TestResponse tResponse) throws TestException {
 		List<String> dObjList = new ArrayList<String>();
 		List<TestInfoResponse> tInfoResList = new ArrayList<TestInfoResponse>();
-		List<TestInfoResponse> intialResonseList = tResponse.getTestInfoResponseList();
+		List<TestInfoResponse> intialResonseList = tResponse
+				.getTestInfoResponseList();
 		int count = 1;
 		try {
 			// Get the workbook instance for XLS file
-			HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(mappingFile));
+			HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(
+					mappingFile));
 			// Get first sheet from the workbook
 			HSSFSheet sheet = workbook.getSheetAt(0);
 			Cell cell;
@@ -520,14 +568,19 @@ public class FilleExcelWriter {
 					dObj.setMappingClassName(mappingClassName);
 
 					tInfoResList.add(dObj);
-					for (Iterator iterator = intialResonseList.iterator(); iterator.hasNext();) {
-						TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
-						if ((testInfoResponse.getApplication().equals(application))
+					for (Iterator iterator = intialResonseList.iterator(); iterator
+							.hasNext();) {
+						TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+								.next();
+						if ((testInfoResponse.getApplication()
+								.equals(application))
 								&& (testInfoResponse.getModule().equals(module))
 								&& (testInfoResponse.getTitle().equals(title))
-								&& (testInfoResponse.getTestScriptId().equals(testScriptId))) {
+								&& (testInfoResponse.getTestScriptId()
+										.equals(testScriptId))) {
 							testInfoResponse.setPath(path);
-							testInfoResponse.setMappingClassName(mappingClassName);
+							testInfoResponse
+									.setMappingClassName(mappingClassName);
 							// testInfoResponse.setStatus(Constants.ReadyForExecution);
 							testInfoResponse.setExcelRecordExists(true);
 						}
@@ -566,7 +619,8 @@ public class FilleExcelWriter {
 	}
 
 	private static void writeSciptsSteps(TestResponse tResponse) {
-		File mappingFile = new File(Constants.MappingFilePath, tResponse.getOrgId() + Constants.MappingFileType);
+		File mappingFile = new File(Constants.MappingFilePath,
+				tResponse.getOrgId() + Constants.MappingFileType);
 		if (!mappingFile.exists()) {
 			try {
 				mappingFile.createNewFile();
@@ -582,7 +636,8 @@ public class FilleExcelWriter {
 
 	}
 
-	private static void createTestScriptMappingFile(String targetPath, String fileName, String testInfoId) {
+	private static void createTestScriptMappingFile(String targetPath,
+			String fileName, String testInfoId) {
 		File mappingFile = new File(targetPath, fileName);
 		if (!mappingFile.exists()) {
 			try {
@@ -597,11 +652,13 @@ public class FilleExcelWriter {
 		}
 
 		// get testscript names
-		List<Object> testscriptlist = SFDomainUtil.getTestScriptsDetails(testInfoId);
+		List<Object> testscriptlist = SFDomainUtil
+				.getTestScriptsDetails(testInfoId);
 
 		// Write Into Excel
 		try {
-			writeExcel(testscriptlist, targetPath + Constants.DirSeperator + fileName, testInfoId);
+			writeExcel(testscriptlist, targetPath + Constants.DirSeperator
+					+ fileName, testInfoId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -609,11 +666,14 @@ public class FilleExcelWriter {
 
 	}
 
-	public static void createTestCaseFile(String targetPath, String className) {
+	public static void createTestCaseFile(String targetPath, String className,
+			TestInfoResponse testInfoResponse,
+			List<Object> activityDetailsDO) {
 		File mappingFile = new File(targetPath, className);
 		if (!mappingFile.exists()) {
 			try {
-				CreateFileUtil.prepareJavaTestFile(className);
+				CreateFileUtil.prepareJavaTestFile(className, testInfoResponse,
+						activityDetailsDO);
 				System.out.println(className + " java file created");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -622,33 +682,11 @@ public class FilleExcelWriter {
 		}
 	}
 
-	private static void createTestCaseFile(String targetPath, String className, String testInfoId) {
+	
+	
 
-		File mappingFile = new File(targetPath, className);
-		if (!mappingFile.exists()) {
-			try {
-				CreateFileUtil.prepareJavaTestFile(className);
-
-				// mappingFile.createNewFile();
-				System.out.println("created");
-				// checkin into git repo
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		// get testscript names
-		// List<Object> testscriptlist =
-		// SFDomainUtil.getTestScriptsDetails(testInfoId);
-
-		// Write Into Java Test case
-		// to be done
-
-	}
-
-	public static void readFileAndUpdateMappingClass(List<TestInfoResponse> initialTestResponseList, String fileName2) {
+	public static void readFileAndUpdateMappingClass(
+			List<TestInfoResponse> initialTestResponseList, String fileName2) {
 		// TODO Auto-generated method stub
 
 	}

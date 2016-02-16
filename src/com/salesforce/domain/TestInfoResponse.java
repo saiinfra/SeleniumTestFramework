@@ -14,6 +14,7 @@ public class TestInfoResponse {
 	String status;
 	String path;
 	String mappingClassName;
+	String testData;
 	Result result;
 	boolean excelRecordExists=false;
 
@@ -43,6 +44,8 @@ public class TestInfoResponse {
 		this.status = status;
 		this.path = path;
 		this.mappingClassName = mappingClassName;
+		this.testData=testData;
+		
 	}
 	
 	public String getApplication() {
@@ -146,5 +149,14 @@ public class TestInfoResponse {
 	public void setExcelRecordExists(boolean excelRecordExists) {
 		this.excelRecordExists = excelRecordExists;
 	}
+
+	public String getTestData() {
+		return testData;
+	}
+
+	public void setTestData(String testData) {
+		this.testData = testData;
+	}
+	
 
 }

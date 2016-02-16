@@ -52,7 +52,7 @@ public class TestRunner {
 		//String arg = "a0361000005aWPoAAM~00D61000000fBw4~T_0000000027";
 		//String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
 		//String arg = "a0361000005aYgnAAE~00D61000000fBw4~T_0000000029";
-		String arg = "a0361000005afyrAAA~00D61000000fBw4~T_0000000034";
+		String arg = "a0361000005afyr~00D61000000fBw4~T_0000000034";
 		
 		if (arg == null) { 
 			arg = "test"; 
@@ -61,7 +61,7 @@ public class TestRunner {
 		init(arg);
 	}
 
-	private static void init(String inputTokens) {
+	private static void init(String inputTokens)  {
 		TestResponse tResponse = new TestResponse();
 		// pre-process
 		FirstCustPreProcessTemplate preProcessTemplate = new FirstCustPreProcessTemplate();

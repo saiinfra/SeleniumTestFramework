@@ -15,9 +15,12 @@ import com.shell.ExecShellScript;
 
 public class ExcelUtil {
 
-	public static void readMappingFileAndSyncWithSF(File mappingFile, TestResponse tResponse) {
+	public static List<Object> activityDetailsDO = null;
+
+	public static void readMappingFileAndSyncWithSF(File mappingFile,
+			TestResponse tResponse) {
 		try {
-			FilleExcelWriter.readFile(mappingFile,tResponse);
+			FilleExcelWriter.readFile(mappingFile, tResponse);
 		} catch (TestException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -39,30 +42,31 @@ public class ExcelUtil {
 		}
 
 		String mappingFolderName = Constants.MappingFolderName;
-		ExecShellScript
-				.checkOutMappingFile(mappingFolderName,
-						testInfoRequest.getGitRepoURL(),
-						Constants.CheckoutFilePath);
-		FilleExcelWriter.readFileAndUpdateMappingClass(
-				initialTestResponseList, fileName);
+		ExecShellScript.checkOutMappingFile(mappingFolderName,
+				testInfoRequest.getGitRepoURL(), Constants.CheckoutFilePath);
+		FilleExcelWriter.readFileAndUpdateMappingClass(initialTestResponseList,
+				fileName);
 	}
-	
-	
-	public static void createMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+
+	public static void createMappingFileAndCheckIn(TestResponse tResponse,
+			Git git) {
 		FilleExcelWriter.createMappingFileAndCheckIn(tResponse, git);
 	}
-	
+
 	public static void createMappingFileAndCheckIn(String fileName,
 			String testInfoId) {
 		FilleExcelWriter.createMappingFileAndCheckIn(fileName, testInfoId);
 	}
 
-	public static void updateMappingFileAndCheckIn(TestResponse tResponse, Git git) {
+	public static void updateMappingFileAndCheckIn(TestResponse tResponse,
+			Git git) {
 		FilleExcelWriter.updateMappingFileAndCheckIn(tResponse, git);
 	}
-	
-	public static void createTestCaseAndCheckIn(List<TestInfoResponse> testResponseList, String fileName) {
-		FilleExcelWriter.createTestCaseAndCheckIn(testResponseList,fileName);
+
+	public static void createTestCaseAndCheckIn(
+			List<TestInfoResponse> testResponseList, String fileName) {
+		FilleExcelWriter.createTestCaseAndCheckIn(testResponseList, fileName,
+				activityDetailsDO);
 	}
 
 	public static Git checkout(String gitrepoURL) {
