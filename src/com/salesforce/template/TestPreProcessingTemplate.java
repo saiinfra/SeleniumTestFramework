@@ -47,7 +47,7 @@ public abstract class TestPreProcessingTemplate {
 		inspectMappingFile(git, tResponse);
 		prepareJavaTestCases(tResponse.getTestInfoResponseList(),
 				tResponse.getOrgId());
-		RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
+		//RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
 		return tResponse.getTestInfoResponseList();
 	}
 
@@ -128,9 +128,10 @@ public abstract class TestPreProcessingTemplate {
 			String ext = ".java";
 
 			try {
-				List<Object> activityDetailsDO1=null;
+				List<Object> activityDetailsDO1 = null;
 				boolean testCaseExistsInExcel = FilleExcelWriter
-						.doesScriptTestCaseExist(testInfoResponse, fileName,activityDetailsDO1);
+						.doesScriptTestCaseExist(testInfoResponse, fileName,
+								activityDetailsDO1);
 				if (testCaseExistsInExcel) {
 					// find if the Test class already exists
 					// in client repository
@@ -146,22 +147,20 @@ public abstract class TestPreProcessingTemplate {
 								.findByTestdetailsId(testInfoResponse
 										.getSfTestInfoScriptRecordId(),
 										SalesForceUtil.getSFHandle());
-						
+
 						System.out.println("TestScript ID"
 								+ testInfoResponse
 										.getSfTestInfoScriptRecordId());
 						FilleExcelWriter.createTestCaseFile(
 								AppUtil.getCurrentPath(), className,
-								testInfoResponse,list);
+								testInfoResponse, list);
 						String sourcePath = AppUtil.getCurrentPath();
-						mappingFileWithPath = new File(
-								AppUtil.getCurrentPath()
-										+ Constants.DirSeperator
-										+ className + ext);
-						// RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
-						// mappingFileWithPath);
+						mappingFileWithPath = new File(AppUtil.getCurrentPath()
+								+ Constants.DirSeperator + className + ext);
+						RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
+								mappingFileWithPath);
 						copyFilesToCustProj(className + ext);
-						
+						copyFilesToCustProjOurSrc(className + ext);
 
 					} else {
 						// do nothing
@@ -216,6 +215,30 @@ public abstract class TestPreProcessingTemplate {
 	private void copyFilesToCustProj(String fileName) {
 
 		File target = new File(Constants.CheckoutFilePath
+				+ Constants.DirSeperator + Constants.JavaSourcePath
+				+ Constants.DirSeperator + fileName);
+
+		File source = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + fileName);
+		try {
+			Files.copy(Paths.get(source.getPath()),
+					Paths.get(target.getPath()),
+					StandardCopyOption.COPY_ATTRIBUTES);
+		} catch (FileAlreadyExistsException e) {
+			// destination file already exists
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void copyFilesToCustProjOurSrc(String fileName) {
+
+		/*
+		 * File target = new File(Constants.CheckoutFilePath +
+		 * Constants.DirSeperator + Constants.JavaSourcePath
+		 */
+		File target = new File(AppUtil.getCurrentPath()
 				+ Constants.DirSeperator + Constants.JavaSourcePath
 				+ Constants.DirSeperator + fileName);
 		File source = new File(AppUtil.getCurrentPath()

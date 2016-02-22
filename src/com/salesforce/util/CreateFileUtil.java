@@ -12,7 +12,7 @@ import com.salesforce.domain.ActivityDetailsDO;
 import com.salesforce.domain.TestInfoResponse;
 
 public class CreateFileUtil {
-	private static StringBuffer sb = new StringBuffer();
+	private static StringBuffer sb;
 
 	public static void prepareJavaTestFile(String fileName,
 			TestInfoResponse testInfoResponse, List<Object> activityDetailsDO) {
@@ -38,12 +38,14 @@ public class CreateFileUtil {
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(sb.toString());
 			bw.close();
+			sb = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private static void writeImports() {
+		sb = new StringBuffer();
 		sb.append("package com.test;");
 		sb.append("\n\n");
 
@@ -165,5 +167,6 @@ public class CreateFileUtil {
 		sb.append("\n");
 		sb.append("}");
 		sb.append("\n");
+
 	}
 }
