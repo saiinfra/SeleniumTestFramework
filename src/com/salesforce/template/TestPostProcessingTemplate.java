@@ -92,16 +92,22 @@ public abstract class TestPostProcessingTemplate {
 			numberOfTest = result.getRunCount();
 			numberOfTestFail = result.getFailureCount();
 			numberOfTestIgnore = result.getIgnoreCount();
+			
+			System.out.println("Number of Failures"+numberOfTestFail);
 
 			if(!tResponse.isMappingFileExist()){
 				resultInformationDO.setType("Automate java test scripts are created. please update to execute.");
 			}
 			if (numberOfTestFail > 0) {
+				
+			
 
 				for (Failure failure : result.getFailures()) {
-					String message = failure.getMessage().substring(0, 254);
-					resultInformationDO.setType(failure.getMessage().substring(0, 254));
-					System.out.println("Error message: "+message);
+					String message = failure.getMessage();
+				
+					
+				    resultInformationDO.setType(message);
+					System.out.println("Error message: "+	failure.toString());
 				}
 				resultInformationDO.setStatus("failure");
 				resultInformationDO.setTestcasename(testcasename);

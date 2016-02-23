@@ -15,7 +15,7 @@ public class Constants {
 	public static String JavaSourcePath = "src/com/test";
 	public static String JavaSourcePath1 = "src/com/test1";
 
-	public static String BinDir = "build/classes";
+	public static String BinDir = "bin/";
 	public static String Space = " ";
 	public static String PackagePath = "com.test.";
 	public static String GitTestProjectURL = "https://github.com/saiinfra/CustomerTestProject.git";

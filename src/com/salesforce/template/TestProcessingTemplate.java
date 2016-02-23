@@ -1,5 +1,9 @@
 package com.salesforce.template;
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -11,21 +15,28 @@ import com.shell.ExecShellScript;
 public abstract class TestProcessingTemplate {
 	Result result = null;
 	TestInfoResponse testInfoResponse;
+	private URLClassLoader urlcl;
 
 	public abstract Result doProcessing();
 
 	public Result doProcessing1() {
-		if (testInfoResponse != null && testInfoResponse.getMappingClassName() != ""
+		if (testInfoResponse != null
+				&& testInfoResponse.getMappingClassName() != ""
 				&& !testInfoResponse.getStatus().equals(Constants.Modified)) {
-			String fileFoundStr = FileSearch.searchCheckoutPath(testInfoResponse.getMappingClassName() + ".java");
+			String fileFoundStr = FileSearch
+					.searchCheckoutPath(testInfoResponse.getMappingClassName()
+							+ ".java");
 			System.out.println("fileFoundStr  : " + fileFoundStr);
-			if (fileFoundStr.equals("Found") && (testInfoResponse.getMappingClassName() != null
-					|| !testInfoResponse.getMappingClassName().isEmpty())) {
+			if (fileFoundStr.equals("Found")
+					&& (testInfoResponse.getMappingClassName() != null || !testInfoResponse
+							.getMappingClassName().isEmpty())) {
 				try {
-					//ExecShellScript.copyFile(fileFoundStr);
-					String compileJava=testInfoResponse.getMappingClassName() + ".java";
+					// ExecShellScript.copyFile(fileFoundStr);
+					String compileJava = testInfoResponse.getMappingClassName()
+							+ ".java";
 					ExecShellScript.compile(compileJava);
-					result = executeTest("com.test." + testInfoResponse.getMappingClassName());
+					result = executeTest("com.test."
+							+ testInfoResponse.getMappingClassName());
 				} catch (Exception e) {
 					e.printStackTrace();
 					result = null;
@@ -50,7 +61,14 @@ public abstract class TestProcessingTemplate {
 		result = null;
 		if (testCase != null) {
 			try {
-				Class<?> myTestToRunTab = Class.forName(testCase);
+
+				/*File f = new File("/home/srikanth/SeleniumTestFramework/bin");
+				URL[] cp = { f.toURI().toURL() };
+				urlcl = new URLClassLoader(cp);*/
+				ClassLoader classLoader = getClass().getClassLoader();  
+
+				Class<?> myTestToRunTab = classLoader.loadClass(testCase);
+				// Class<?> myTestToRunTab = Class.forName(testCase);
 				result = JUnitCore.runClasses(myTestToRunTab);
 				return result;
 			} catch (Exception e) {

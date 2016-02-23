@@ -47,7 +47,7 @@ public abstract class TestPreProcessingTemplate {
 		inspectMappingFile(git, tResponse);
 		prepareJavaTestCases(tResponse.getTestInfoResponseList(),
 				tResponse.getOrgId());
-		//RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
+		RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
 		return tResponse.getTestInfoResponseList();
 	}
 

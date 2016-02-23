@@ -1,5 +1,6 @@
 #!/bin/sh
 
-javac -classpath ./lib/*.jar -d $1 $2
+echo javac -classpath ./lib/*:./bin -d $1 $2
+javac -classpath ./lib/*:./bin -d $1 $2
 
 exit

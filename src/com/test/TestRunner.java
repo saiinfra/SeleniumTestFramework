@@ -44,24 +44,26 @@ public class TestRunner {
 	}
 
 	public static void main(String[] args) {
-		String arg = args[0];
+		 String arg = args[0];
 		// testId~OrgId~TestInfoName
 		// String arg = "a0361000005ZnOy~00D61000000fBw41~T-0000000001";
 		// String arg = "a0361000005aMqp~00D61000000fBw43~T_0000000007";
-		//String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
-		//String arg = "a0361000005aWPoAAM~00D61000000fBw4~T_0000000027";
-		//String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
-		//String arg = "a0361000005aYgnAAE~00D61000000fBw4~T_0000000029";
-	//	String arg = "a0361000005afyr~00D61000000fBw4~T_0000000034";
-		
-		if (arg == null) { 
-			arg = "test"; 
+		// String arg = "a0361000005aRN6AAM~00D61000000fBw43~T_0000000018";
+		// String arg = "a0361000005aWPoAAM~00D61000000fBw4~T_0000000027";
+		// String arg = "a0361000005aWH3AAM~00D61000000fBw4~T_0000000027";
+		// String arg = "a0361000005aYgnAAE~00D61000000fBw4~T_0000000029";
+		//String arg = "a0361000005afyr~00D61000000fBw4~T_0000000034";
+
+		System.out.println("Main");
+
+		if (arg == null) {
+			arg = "test";
 		}
-		 
+
 		init(arg);
 	}
 
-	private static void init(String inputTokens)  {
+	private static void init(String inputTokens) {
 		TestResponse tResponse = new TestResponse();
 		// pre-process
 		FirstCustPreProcessTemplate preProcessTemplate = new FirstCustPreProcessTemplate();
@@ -69,37 +71,45 @@ public class TestRunner {
 
 		if ((tResponse.getTestInfoResponseList() == null)) {
 			// post processing
-			FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(null, null, null);
+			FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(
+					null, null, null);
 			firstCustPostTemplate.doPostProcessing(tResponse);
 		} else {
 
 			String metadatLogId = SFDomainUtil.createEmptyMetadataLogId();
 			if (tResponse.isMappingFileExist()) {
-				for (Iterator<TestInfoResponse> iterator = tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
-					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+				for (Iterator<TestInfoResponse> iterator = tResponse
+						.getTestInfoResponseList().iterator(); iterator
+						.hasNext();) {
+					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+							.next();
 					// processing
-					FirstCustProcessTemplate processTemplate = new FirstCustProcessTemplate(testInfoResponse);
+					FirstCustProcessTemplate processTemplate = new FirstCustProcessTemplate(
+							testInfoResponse);
 					Result result = processTemplate.doProcessing();
 
 					// post processing
-					FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(testInfoResponse, result,
-							metadatLogId);
+					FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(
+							testInfoResponse, result, metadatLogId);
 					firstCustPostTemplate.doPostProcessing(tResponse);
 				}
-			}
-			else{
-				for (Iterator<TestInfoResponse> iterator =  tResponse.getTestInfoResponseList().iterator(); iterator.hasNext();) {
-					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+			} else {
+				for (Iterator<TestInfoResponse> iterator = tResponse
+						.getTestInfoResponseList().iterator(); iterator
+						.hasNext();) {
+					TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+							.next();
 					// processing
-					FirstCustProcessTemplate postProcessTemplate = new FirstCustProcessTemplate(testInfoResponse);
+					FirstCustProcessTemplate postProcessTemplate = new FirstCustProcessTemplate(
+							testInfoResponse);
 					Result result = postProcessTemplate.doProcessing();
 
 					// post processing
-					FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(testInfoResponse, result,
-							metadatLogId);
+					FirstCustPostTemplate firstCustPostTemplate = new FirstCustPostTemplate(
+							testInfoResponse, result, metadatLogId);
 					firstCustPostTemplate.doPostProcessing(tResponse);
 				}
-				
+
 			}
 		}
 	}
