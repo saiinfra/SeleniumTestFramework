@@ -14,13 +14,12 @@ import com.salesforce.domain.TestInfoResponse;
 public class CreateFileUtil {
 	private static StringBuffer sb;
 
-	public static void prepareJavaTestFile(String fileName,
-			TestInfoResponse testInfoResponse, List<Object> activityDetailsDO) {
+	public static void prepareJavaTestFile(String fileName, TestInfoResponse testInfoResponse,
+			List<List<Object>> activityDetailsDO) {
 		try {
 			System.out.println("Activity Details Data" + activityDetailsDO);
 
-			File file = new File(AppUtil.getCurrentPath()
-					+ Constants.DirSeperator + fileName + ".java");
+			File file = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileName + ".java");
 			System.out.println(file.getPath());
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -101,8 +100,8 @@ public class CreateFileUtil {
 		sb.append("\n");
 	}
 
-	private static void writeTestScript(TestInfoResponse testInfoResponse,
-			List<Object> activityDetailsDO) {
+	private static void writeTestScript(TestInfoResponse testInfoResponse, List<List<Object>> activityDetailsDO) {
+
 		sb.append("\n\t@Test");
 		sb.append("\n");
 		/*
@@ -112,42 +111,60 @@ public class CreateFileUtil {
 		sb.append("\tpublic void test () throws Exception{");
 		sb.append("\n");
 
-		for (Iterator iterator = activityDetailsDO.iterator(); iterator
-				.hasNext();) {
-			ActivityDetailsDO object = (ActivityDetailsDO) iterator.next();
-			String actionType = object.getActionType();
-			System.out.println("Action Type" + actionType);
-			String elementLocationType = object.getElementLocationType();
-			System.out.println("elementLocationType " + elementLocationType);
+		for (Iterator iterator = activityDetailsDO.iterator(); iterator.hasNext();) {
+			List<Object> list = (List<Object>) iterator.next();
 
-			if (actionType.equals("OpenURL")) {
-				String baseUrl = "\"" + object.getData() + "\"";
+			for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+				ActivityDetailsDO object = (ActivityDetailsDO) iterator2.next();
 
-				sb.append("\t\tdriver.get(" + baseUrl + "  );");
-				sb.append("\n");
+				String actionType = object.getActionType();
+				System.out.println("Action Type" + actionType);
+				String elementLocationType = object.getElementLocationType();
+				System.out.println("elementLocationType " + elementLocationType);
+				if (actionType.equals("OpenURL")) {
+					String baseUrl = "\"" + object.getData() + "\"";
+
+					sb.append("\t\tdriver.get(" + baseUrl + "  );");
+					sb.append("\n");
+				}
+
+				if (actionType.equals("EnterText")
+						&& elementLocationType.equals("id")) {
+					String id = "\"" + object.getComponentName() + "\"";
+					String sendkeys = "\"" + object.getData() + "\"";
+
+					sb.append("\t\tdriver.findElement(By.id(" + id + ")).clear();");
+					sb.append("\n");
+					sb.append("\t\tdriver.findElement(By.id(" + id + ")).sendKeys("
+							+ sendkeys + ");");
+					sb.append("\n");
+				}
+
+			
+				if (actionType.equals("ButtonClick")
+						&& elementLocationType.equals("id")) {
+					String click = "\"" + object.getComponentName() + "\"";
+					sb.append("\t\tdriver.findElement(By.id(" + click
+							+ ")).click();");
+					sb.append("\n");
+				}
+				if (actionType.equals("ButtonClick")
+						&& elementLocationType.equals("name")) {
+					String click = "\"" + object.getComponentName() + "\"";
+					sb.append("\t\tdriver.findElement(By.name(" + click
+							+ ")).click();");
+					sb.append("\n");
+				}
+				if (actionType.equals("ButtonClick")
+						&& elementLocationType.equals("linkText")) {
+					String click = "\"" + object.getComponentName() + "\"";
+					sb.append("\t\tdriver.findElement(By.linkText(" + click
+							+ ")).click();");
+					sb.append("\n");
+				} else {
+					System.out.println("Not");
+				}
 			}
-
-			if (actionType.equals("EnterText")
-					&& elementLocationType.equals("id")) {
-				String id = "\"" + object.getComponentName() + "\"";
-				String sendkeys = "\"" + object.getData() + "\"";
-
-				sb.append("\t\tdriver.findElement(By.id(" + id + ")).clear();");
-				sb.append("\n");
-				sb.append("\t\tdriver.findElement(By.id(" + id + ")).sendKeys("
-						+ sendkeys + ");");
-				sb.append("\n");
-			}
-			if (actionType.equals("ButtonClick")
-					&& elementLocationType.equals("id")) {
-				String click = "\"" + object.getComponentName() + "\"";
-				sb.append("\t\tdriver.findElement(By.id(" + click
-						+ ")).click();");
-				sb.append("\n");
-			} else {
-				System.out.println("Not");
-			}
-
 		}
 		sb.append("\t}");
 		sb.append("\n");

@@ -15,7 +15,7 @@ import com.shell.ExecShellScript;
 
 public class ExcelUtil {
 
-	public static List<Object> activityDetailsDO = null;
+	public static List<List<Object>> activityDetailsDO = null;
 
 	public static void readMappingFileAndSyncWithSF(File mappingFile,
 			TestResponse tResponse) {
