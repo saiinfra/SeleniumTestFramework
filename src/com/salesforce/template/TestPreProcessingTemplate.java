@@ -48,7 +48,7 @@ public abstract class TestPreProcessingTemplate {
 		inspectMappingFile(git, tResponse);
 		prepareJavaTestCases(tResponse.getTestInfoResponseList(),
 				tResponse.getOrgId());
-		// RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
+		RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
 		return tResponse.getTestInfoResponseList();
 	}
 
@@ -162,10 +162,9 @@ public abstract class TestPreProcessingTemplate {
 						mappingFileWithPath = new File(AppUtil.getCurrentPath()
 								+ Constants.DirSeperator + className + ext);
 
-						/*
-						 * RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
-						 * mappingFileWithPath);
-						 */
+						RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
+								mappingFileWithPath);
+
 						copyFilesToCustProj(className + ext);
 						copyFilesToCustProjOurSrc(className + ext);
 
