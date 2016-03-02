@@ -32,9 +32,11 @@ import com.salesforce.util.SalesForceUtil;
 
 public abstract class TestPreProcessingTemplate {
 
-	public abstract List<TestInfoResponse> doPreProcessing(String inputTokens, TestResponse tResponse);
+	public abstract List<TestInfoResponse> doPreProcessing(String inputTokens,
+			TestResponse tResponse);
 
-	public List<TestInfoResponse> doPreProcessing1(String inputTokens, TestResponse tResponse) {
+	public List<TestInfoResponse> doPreProcessing1(String inputTokens,
+			TestResponse tResponse) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -44,8 +46,9 @@ public abstract class TestPreProcessingTemplate {
 		prepareRequest(inputTokens, tResponse);
 		Git git = RepoUtil.checkOutCustomerProject(tResponse);
 		inspectMappingFile(git, tResponse);
-		prepareJavaTestCases(tResponse.getTestInfoResponseList(), tResponse.getOrgId());
-		RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
+		prepareJavaTestCases(tResponse.getTestInfoResponseList(),
+				tResponse.getOrgId());
+		// RepoUtil.CheckInCheckoutFolder(git, gitRepoDO);
 		return tResponse.getTestInfoResponseList();
 	}
 
@@ -54,7 +57,8 @@ public abstract class TestPreProcessingTemplate {
 		TestInfoRequest testInfoRequest = readInputTokensInto(inputTokens);
 
 		// prepare TestInformation Test case object
-		TestInformationDO testInformationDO = SFDomainUtil.getTestAppHeaderDetails(testInfoRequest.getTestInfoId());
+		TestInformationDO testInformationDO = SFDomainUtil
+				.getTestAppHeaderDetails(testInfoRequest.getTestInfoId());
 		if (testInformationDO == null) {
 			testInfoRequest.setGitRepoURL(Constants.GitTestProjectURL);
 		} else {
@@ -67,8 +71,8 @@ public abstract class TestPreProcessingTemplate {
 		// Get test script details from salesforce and prepare initial response
 		// objects
 		List<TestInfoResponse> initialTestResponseList = null;
-		initialTestResponseList = SFDomainUtil.prepareResponseDomainObject(testInformationDO,
-				testInfoRequest.getTestInfoId());
+		initialTestResponseList = SFDomainUtil.prepareResponseDomainObject(
+				testInformationDO, testInfoRequest.getTestInfoId());
 		tResponse.setTestInfoResponseList(initialTestResponseList);
 		tResponse.setTestInformationDO(testInformationDO);
 	}
@@ -78,16 +82,19 @@ public abstract class TestPreProcessingTemplate {
 		RepoClass.deleteDirectory(checkOutDir);
 
 		// checkout from git to find whether file exists or not
-		Git git = ExcelUtil.checkout(tResponse.getTestInformationDO().getExecutionURL());
+		Git git = ExcelUtil.checkout(tResponse.getTestInformationDO()
+				.getExecutionURL());
 		return git;
 	}
 
 	private void inspectMappingFile(Git git, TestResponse tResponse) {
 		// String mappingFileName = tResponse.getOrgId() +
 		// Constants.MappingFileType;
-		String mappingFileNameWithExt = tResponse.getOrgId() + Constants.MappingFileType;
-		System.out.println(Constants.CheckoutFilePath + Constants.DirSeperator + Constants.MappingFolderName
-				+ Constants.DirSeperator + mappingFileNameWithExt);
+		String mappingFileNameWithExt = tResponse.getOrgId()
+				+ Constants.MappingFileType;
+		System.out.println(Constants.CheckoutFilePath + Constants.DirSeperator
+				+ Constants.MappingFolderName + Constants.DirSeperator
+				+ mappingFileNameWithExt);
 		String fileFound = FileSearch.getPath(mappingFileNameWithExt);
 
 		if (fileFound.equals("NotFound")) {
@@ -96,7 +103,8 @@ public abstract class TestPreProcessingTemplate {
 		} else {
 			// read xls file from checkout folder testcases
 			// update response Objects with the data read from xls
-			File file = new File(Constants.CheckoutPath + Constants.DirSeperator + mappingFileNameWithExt);
+			File file = new File(Constants.CheckoutPath
+					+ Constants.DirSeperator + mappingFileNameWithExt);
 			ExcelUtil.readMappingFileAndSyncWithSF(file, tResponse);
 			tResponse.setMappingFileExist(true);
 			ExcelUtil.updateMappingFileAndCheckIn(tResponse, git);
@@ -104,7 +112,8 @@ public abstract class TestPreProcessingTemplate {
 
 	}
 
-	private void prepareJavaTestCases(List<TestInfoResponse> testResponseList, String fileName) {
+	private void prepareJavaTestCases(List<TestInfoResponse> testResponseList,
+			String fileName) {
 		String userName = "skrishna@infrascape.com";
 		String password = "Yarragsa@01";
 		String url = "https://github.com/saiinfra/CustomerTestProject.git";
@@ -113,39 +122,50 @@ public abstract class TestPreProcessingTemplate {
 		File mappingFileWithPath = null;
 		List<List<Object>> list = new ArrayList<List<Object>>();
 
-		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator.hasNext();) {
-			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator.next();
+		for (Iterator<TestInfoResponse> iterator = testResponseList.iterator(); iterator
+				.hasNext();) {
+			TestInfoResponse testInfoResponse = (TestInfoResponse) iterator
+					.next();
 			String className = testInfoResponse.getMappingClassName();
 			String ext = ".java";
 
 			try {
 				List<List<Object>> activityDetailsDO1 = null;
-				boolean testCaseExistsInExcel = FilleExcelWriter.doesScriptTestCaseExist(testInfoResponse, fileName,
-						activityDetailsDO1);
+				boolean testCaseExistsInExcel = FilleExcelWriter
+						.doesScriptTestCaseExist(testInfoResponse, fileName,
+								activityDetailsDO1);
 				if (testCaseExistsInExcel) {
 					// find if the Test class already exists
 					// in client repository
-					String javaSrcFile = testInfoResponse.getMappingClassName() + ".java";
+					String javaSrcFile = testInfoResponse.getMappingClassName()
+							+ ".java";
 					System.out.println(javaSrcFile);
 					String fileFound = FileSearch.getPath(javaSrcFile);
 					if (fileFound.equals("NotFound")) {
 						// create test case
 
 						ActivityDetailsDAO activityDetailsDAO = new ActivityDetailsDAO();
-						List<Object> newList = activityDetailsDAO.findByTestdetailsId(
-								testInfoResponse.getSfTestInfoScriptRecordId(), SalesForceUtil.getSFHandle());
+						List<Object> newList = activityDetailsDAO
+								.findByTestdetailsId(testInfoResponse
+										.getSfTestInfoScriptRecordId(),
+										SalesForceUtil.getSFHandle());
 
 						list.add(newList);
 
-						System.out.println("TestScript ID" + testInfoResponse.getSfTestInfoScriptRecordId());
-						FilleExcelWriter.createTestCaseFile(AppUtil.getCurrentPath(), className, testInfoResponse,
-								list);
+						System.out.println("TestScript ID"
+								+ testInfoResponse
+										.getSfTestInfoScriptRecordId());
+						FilleExcelWriter.createTestCaseFile(
+								AppUtil.getCurrentPath(), className,
+								testInfoResponse, list);
 						String sourcePath = AppUtil.getCurrentPath();
-						mappingFileWithPath = new File(
-								AppUtil.getCurrentPath() + Constants.DirSeperator + className + ext);
-				
-						RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
-						 mappingFileWithPath);
+						mappingFileWithPath = new File(AppUtil.getCurrentPath()
+								+ Constants.DirSeperator + className + ext);
+
+						/*
+						 * RepoUtil.CheckInSrc(gitRepoDO, sourcePath,
+						 * mappingFileWithPath);
+						 */
 						copyFilesToCustProj(className + ext);
 						copyFilesToCustProjOurSrc(className + ext);
 
@@ -201,12 +221,16 @@ public abstract class TestPreProcessingTemplate {
 
 	private void copyFilesToCustProj(String fileName) {
 
-		File target = new File(Constants.CheckoutFilePath + Constants.DirSeperator + Constants.JavaSourcePath
+		File target = new File(Constants.CheckoutFilePath
+				+ Constants.DirSeperator + Constants.JavaSourcePath
 				+ Constants.DirSeperator + fileName);
 
-		File source = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileName);
+		File source = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + fileName);
 		try {
-			Files.copy(Paths.get(source.getPath()), Paths.get(target.getPath()), StandardCopyOption.COPY_ATTRIBUTES);
+			Files.copy(Paths.get(source.getPath()),
+					Paths.get(target.getPath()),
+					StandardCopyOption.COPY_ATTRIBUTES);
 		} catch (FileAlreadyExistsException e) {
 			// destination file already exists
 		} catch (Exception e) {
@@ -221,11 +245,15 @@ public abstract class TestPreProcessingTemplate {
 		 * File target = new File(Constants.CheckoutFilePath +
 		 * Constants.DirSeperator + Constants.JavaSourcePath
 		 */
-		File target = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + Constants.JavaSourcePath
+		File target = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + Constants.JavaSourcePath
 				+ Constants.DirSeperator + fileName);
-		File source = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileName);
+		File source = new File(AppUtil.getCurrentPath()
+				+ Constants.DirSeperator + fileName);
 		try {
-			Files.copy(Paths.get(source.getPath()), Paths.get(target.getPath()), StandardCopyOption.COPY_ATTRIBUTES);
+			Files.copy(Paths.get(source.getPath()),
+					Paths.get(target.getPath()),
+					StandardCopyOption.COPY_ATTRIBUTES);
 		} catch (FileAlreadyExistsException e) {
 			// destination file already exists
 		} catch (Exception e) {

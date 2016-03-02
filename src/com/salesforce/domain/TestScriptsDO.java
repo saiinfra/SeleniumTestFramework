@@ -15,6 +15,8 @@ public class TestScriptsDO {
 	String times;
 	String status;
 	String sciptStatus;
+	String testScriptType;
+	String loginType;
 
 	public TestScriptsDO(String id, String testScritName, String actualResult,
 			String expectedResult, String Step, String testData,
@@ -40,13 +42,16 @@ public class TestScriptsDO {
 		this.testScritName = testScritName;
 		this.testScritId = testScritName;
 	}
-	
-	public TestScriptsDO(String id, String testScritName, String testSteps, String sciptStatus) {
+
+	public TestScriptsDO(String id, String testScritName, String testSteps,
+			String sciptStatus, String testScriptType, String loginType) {
 		this.id = id;
 		this.testScritName = testScritName;
 		this.testScritId = testScritName;
 		this.testSteps = testSteps;
 		this.sciptStatus = sciptStatus;
+		this.testScriptType = testScriptType;
+		this.loginType = loginType;
 	}
 
 	public String getId() {
@@ -152,7 +157,23 @@ public class TestScriptsDO {
 	public void setSciptStatus(String sciptStatus) {
 		this.sciptStatus = sciptStatus;
 	}
-	
-	
 
+	public String getTestScriptType() {
+		return testScriptType;
+	}
+
+	public void setTestScriptType(String testScriptType) {
+		this.testScriptType = testScriptType;
+	}
+
+	public String getLoginType() {
+		return loginType;
+	}
+
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
+
+	
+	
 }

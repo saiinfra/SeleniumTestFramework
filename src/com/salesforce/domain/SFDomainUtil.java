@@ -58,7 +58,9 @@ public class SFDomainUtil {
 							testScriptsDO.getTestScritId(),
 							testScriptsDO.getTestSteps(),
 							testScriptsDO.getSciptStatus(), null,
-							testScriptsDO.getTestScritId());
+							testScriptsDO.getTestScritId(),
+							testScriptsDO.getTestScriptType(),
+							testScriptsDO.getLoginType());
 				} else {
 					testInfoResponse = new TestInfoResponse(
 							testInformationDO.getId(), testScriptsDO.getId(),
@@ -68,7 +70,9 @@ public class SFDomainUtil {
 							testScriptsDO.getTestScritId(),
 							testScriptsDO.getTestSteps(),
 							testScriptsDO.getSciptStatus(), null,
-							testScriptsDO.getTestScritId());
+							testScriptsDO.getTestScritId(),
+							testScriptsDO.getTestScriptType(),
+							testScriptsDO.getLoginType());
 				}
 				responseObjList.add(testInfoResponse);
 			}
@@ -80,7 +84,7 @@ public class SFDomainUtil {
 						testInformationDO.getApplication(),
 						testInformationDO.getModulename(),
 						testInformationDO.getTitle(), null, null, null, null,
-						null);
+						null, null, null);
 				responseObjList.add(testInfoResponse);
 			}
 		}
@@ -113,7 +117,9 @@ public class SFDomainUtil {
 							testInformationDO.getTitle(),
 							testScriptsDO.getTestScritId(),
 							testScriptsDO.getTestScritName(), "status", "path",
-							excelTestCaseDObj.getMappingClassName());
+							excelTestCaseDObj.getMappingClassName(),
+							testScriptsDO.getTestScriptType(),
+							testScriptsDO.getLoginType());
 					if (testScriptsDO.getTestScritId().equals(
 							excelTestCaseDObj.getTestScriptId())) {
 						System.out

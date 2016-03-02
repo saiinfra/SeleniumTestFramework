@@ -28,7 +28,15 @@ public class TestScriptsDAO {
 					testScriptsDO = new TestScriptsDO(test_Script__c.getId(),
 							test_Script__c.getName(),
 							test_Script__c.getTest_Steps__c(),
-							test_Script__c.getScript_Status__c());
+							test_Script__c.getScript_Status__c(),
+							test_Script__c.getTestScriptType__c(),
+							test_Script__c.getLoginType__c());
+
+					System.out.println(" - Login Type: "
+							+ test_Script__c.getLoginType__c());
+
+					System.out.println(" - TestScript Type: "
+							+ test_Script__c.getTestScriptType__c());
 
 					System.out.println(" - Name: " + test_Script__c.getName());
 
@@ -62,7 +70,44 @@ public class TestScriptsDAO {
 					testScriptsDO = new TestScriptsDO(test_Script__c.getId(),
 							test_Script__c.getName(),
 							test_Script__c.getTest_Steps__c(),
-							test_Script__c.getScript_Status__c());
+							test_Script__c.getScript_Status__c(),
+							test_Script__c.getTestScriptType__c(),
+							test_Script__c.getLoginType__c());
+
+					System.out.println(" - Name: " + test_Script__c.getName());
+
+					list.add(testScriptsDO);
+				}
+			} else {
+				System.out.println(" There are no records size is - : "
+						+ queryResults.getSize());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public List<Object> findByScriptId(String id,
+			SFoAuthHandle sfHandle) {
+		com.sforce.soap.enterprise.sobject.Test_Script__c test_Script__c = null;
+		List<Object> list = new ArrayList<Object>();
+		try {
+			EnterpriseConnection conn = sfHandle.getEnterpriseConnection();
+			QueryResult queryResults = conn.query(TestScriptsSQLStmts
+					.gettestscripts2(id));
+			if (queryResults.getSize() > 0) {
+
+				TestScriptsDO testScriptsDO = null;
+				for (int i = 0; i < queryResults.getRecords().length; i++) {
+					test_Script__c = (com.sforce.soap.enterprise.sobject.Test_Script__c) queryResults
+							.getRecords()[i];
+
+					testScriptsDO = new TestScriptsDO(test_Script__c.getId(),
+							test_Script__c.getName(),
+							test_Script__c.getTest_Steps__c(),
+							test_Script__c.getScript_Status__c(),
+							test_Script__c.getTestScriptType__c(),
+							test_Script__c.getLoginType__c());
 
 					System.out.println(" - Name: " + test_Script__c.getName());
 

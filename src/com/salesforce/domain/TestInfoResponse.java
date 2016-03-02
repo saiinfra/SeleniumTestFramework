@@ -15,25 +15,31 @@ public class TestInfoResponse {
 	String path;
 	String mappingClassName;
 	String testData;
+	String testScriptType;
+	String loginType;
 	Result result;
-	boolean excelRecordExists=false;
+	boolean excelRecordExists = false;
 
 	public TestInfoResponse() {
 		super();
 	}
 
-	public TestInfoResponse(String sfTestInfoParentId, String sfTestInfoScriptRecordId, String testScriptId,
-			String mappingClassName) {
+	public TestInfoResponse(String sfTestInfoParentId,
+			String sfTestInfoScriptRecordId, String testScriptId,
+			String mappingClassName, String testScriptType, String loginType) {
 		this.sfTestInfoParentId = sfTestInfoParentId;
 		this.sfTestInfoScriptRecordId = sfTestInfoScriptRecordId;
 		this.testScriptId = testScriptId;
 		this.mappingClassName = mappingClassName;
-		this.result = result;
+		this.testScriptType = testScriptType;
+		this.loginType = loginType;
 	}
 
-	public TestInfoResponse(String sfTestInfoParentId, String sfTestInfoScriptRecordId, String application,
-			String module, String title, String testScriptId, String testScriptName, String status, String path,
-			String mappingClassName) {
+	public TestInfoResponse(String sfTestInfoParentId,
+			String sfTestInfoScriptRecordId, String application, String module,
+			String title, String testScriptId, String testScriptName,
+			String status, String path, String mappingClassName,
+			String testScriptType, String loginType) {
 		this.sfTestInfoParentId = sfTestInfoParentId;
 		this.sfTestInfoScriptRecordId = sfTestInfoScriptRecordId;
 		this.application = application;
@@ -44,10 +50,11 @@ public class TestInfoResponse {
 		this.status = status;
 		this.path = path;
 		this.mappingClassName = mappingClassName;
-		this.testData=testData;
-		
+		this.testScriptType = testScriptType;
+		this.loginType = loginType;
+
 	}
-	
+
 	public String getApplication() {
 		return application;
 	}
@@ -105,9 +112,11 @@ public class TestInfoResponse {
 	}
 
 	public String toString() {
-		return "application: " + this.application + " module: " + this.module + " title: " + this.title
-				+ " testScriptId: " + this.testScriptId + " testScriptName: " + this.testScriptName + " status: "
-				+ this.status + " MappingClassName: " + this.mappingClassName;
+		return "application: " + this.application + " module: " + this.module
+				+ " title: " + this.title + " testScriptId: "
+				+ this.testScriptId + " testScriptName: " + this.testScriptName
+				+ " status: " + this.status + " MappingClassName: "
+				+ this.mappingClassName;
 	}
 
 	public Result getResult() {
@@ -157,6 +166,21 @@ public class TestInfoResponse {
 	public void setTestData(String testData) {
 		this.testData = testData;
 	}
-	
+
+	public String getTestScriptType() {
+		return testScriptType;
+	}
+
+	public void setTestScriptType(String testScriptType) {
+		this.testScriptType = testScriptType;
+	}
+
+	public String getLoginType() {
+		return loginType;
+	}
+
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
 
 }

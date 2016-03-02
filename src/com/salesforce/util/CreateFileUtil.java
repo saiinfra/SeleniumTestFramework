@@ -10,16 +10,20 @@ import java.util.List;
 
 import com.salesforce.domain.ActivityDetailsDO;
 import com.salesforce.domain.TestInfoResponse;
+import com.salesforce.domain.TestScriptsDO;
+import com.salesforce.ds.TestScriptsDAO;
 
 public class CreateFileUtil {
 	private static StringBuffer sb;
 
-	public static void prepareJavaTestFile(String fileName, TestInfoResponse testInfoResponse,
+	public static void prepareJavaTestFile(String fileName,
+			TestInfoResponse testInfoResponse,
 			List<List<Object>> activityDetailsDO) {
 		try {
 			System.out.println("Activity Details Data" + activityDetailsDO);
 
-			File file = new File(AppUtil.getCurrentPath() + Constants.DirSeperator + fileName + ".java");
+			File file = new File(AppUtil.getCurrentPath()
+					+ Constants.DirSeperator + fileName + ".java");
 			System.out.println(file.getPath());
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -100,7 +104,8 @@ public class CreateFileUtil {
 		sb.append("\n");
 	}
 
-	private static void writeTestScript(TestInfoResponse testInfoResponse, List<List<Object>> activityDetailsDO) {
+	private static void writeTestScript(TestInfoResponse testInfoResponse,
+			List<List<Object>> activityDetailsDO) {
 
 		sb.append("\n\t@Test");
 		sb.append("\n");
@@ -111,61 +116,223 @@ public class CreateFileUtil {
 		sb.append("\tpublic void test () throws Exception{");
 		sb.append("\n");
 
-		for (Iterator iterator = activityDetailsDO.iterator(); iterator.hasNext();) {
-			List<Object> list = (List<Object>) iterator.next();
+		if (testInfoResponse.getTestScriptType().equals("Login")
+				&& testInfoResponse.getLoginType().equals(
+						"Production/Developer")) {
 
-			for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
-				ActivityDetailsDO object = (ActivityDetailsDO) iterator2.next();
+			String URL = "https://login.salesforce.com";
+			String baseUrl = "\"" + URL + "\"";
 
-				String actionType = object.getActionType();
-				System.out.println("Action Type" + actionType);
-				String elementLocationType = object.getElementLocationType();
-				System.out.println("elementLocationType " + elementLocationType);
-				if (actionType.equals("OpenURL")) {
-					String baseUrl = "\"" + object.getData() + "\"";
+			sb.append("\t\tdriver.get(" + baseUrl + "  );");
+			sb.append("\n");
 
-					sb.append("\t\tdriver.get(" + baseUrl + "  );");
-					sb.append("\n");
+			for (Iterator iterator = activityDetailsDO.iterator(); iterator
+					.hasNext();) {
+				List<Object> list = (List<Object>) iterator.next();
+
+				for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+					ActivityDetailsDO object = (ActivityDetailsDO) iterator2
+							.next();
+					String actionType = object.getActionType();
+					System.out.println("Action Type" + actionType);
+					System.out.println("Test Script ID in for Loop "
+							+ object.getTestScriptDetails());
+
+					if (actionType.equals("Text")) {
+
+						if (object.getComponentName().equalsIgnoreCase(
+								"username")) {
+							String userName = "username";
+							String id = "\"" + userName + "\"";
+							String sendkeys = "\"" + object.getData() + "\"";
+
+							sb.append("\t\tdriver.findElement(By.id(" + id
+									+ ")).clear();");
+							sb.append("\n");
+							sb.append("\t\tdriver.findElement(By.id(" + id
+									+ ")).sendKeys(" + sendkeys + ");");
+							sb.append("\n");
+						}
+
+						if (object.getComponentName().equalsIgnoreCase(
+								"password")) {
+							String password = "password";
+							String id = "\"" + password + "\"";
+							String sendkeys = "\"" + object.getData() + "\"";
+
+							sb.append("\t\tdriver.findElement(By.id(" + id
+									+ ")).clear();");
+							sb.append("\n");
+							sb.append("\t\tdriver.findElement(By.id(" + id
+									+ ")).sendKeys(" + sendkeys + ");");
+							sb.append("\n");
+						}
+
+					}
+
 				}
 
-				if (actionType.equals("EnterText")
-						&& elementLocationType.equals("id")) {
-					String id = "\"" + object.getComponentName() + "\"";
-					String sendkeys = "\"" + object.getData() + "\"";
-
-					sb.append("\t\tdriver.findElement(By.id(" + id + ")).clear();");
-					sb.append("\n");
-					sb.append("\t\tdriver.findElement(By.id(" + id + ")).sendKeys("
-							+ sendkeys + ");");
-					sb.append("\n");
-				}
-
-			
-				if (actionType.equals("ButtonClick")
-						&& elementLocationType.equals("id")) {
-					String click = "\"" + object.getComponentName() + "\"";
-					sb.append("\t\tdriver.findElement(By.id(" + click
-							+ ")).click();");
-					sb.append("\n");
-				}
-				if (actionType.equals("ButtonClick")
-						&& elementLocationType.equals("name")) {
-					String click = "\"" + object.getComponentName() + "\"";
-					sb.append("\t\tdriver.findElement(By.name(" + click
-							+ ")).click();");
-					sb.append("\n");
-				}
-				if (actionType.equals("ButtonClick")
-						&& elementLocationType.equals("linkText")) {
-					String click = "\"" + object.getComponentName() + "\"";
-					sb.append("\t\tdriver.findElement(By.linkText(" + click
-							+ ")).click();");
-					sb.append("\n");
-				} else {
-					System.out.println("Not");
-				}
 			}
+
+			String label = "Login";
+
+			String click = "\"" + label + "\"";
+			sb.append("\t\tdriver.findElement(By.id(" + click + ")).click();");
+			sb.append("\n");
+
 		}
+
+		else if (testInfoResponse.getTestScriptType().equals("Account")) {
+
+			String URL = "https://login.salesforce.com";
+			String baseUrl = "\"" + URL + "\"";
+
+			sb.append("\t\tdriver.get(" + baseUrl + "  );");
+			sb.append("\n");
+
+			for (Iterator iterator = activityDetailsDO.iterator(); iterator
+					.hasNext();) {
+				List<Object> list = (List<Object>) iterator.next();
+
+				for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+					ActivityDetailsDO object = (ActivityDetailsDO) iterator2
+							.next();
+					String actionType = object.getActionType();
+					System.out.println("Action Type" + actionType);
+
+					TestScriptsDAO testScriptsDAO = new TestScriptsDAO();
+					List<Object> listTestScript = testScriptsDAO
+							.findByScriptId(object.getTestScriptDetails(),
+									SalesForceUtil.getSFHandle());
+
+					if (actionType.equals("Text")
+							&& object.getComponentName().equalsIgnoreCase(
+									"username")) {
+
+						String userName = "username";
+						String id = "\"" + userName + "\"";
+						String sendkeys = "\"" + object.getData() + "\"";
+
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).clear();");
+						sb.append("\n");
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).sendKeys(" + sendkeys + ");");
+						sb.append("\n");
+					}
+
+					if (actionType.equals("Text")
+							&& object.getComponentName().equalsIgnoreCase(
+									"password")) {
+						String password = "password";
+						String id = "\"" + password + "\"";
+						String sendkeys = "\"" + object.getData() + "\"";
+
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).clear();");
+						sb.append("\n");
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).sendKeys(" + sendkeys + ");");
+						sb.append("\n");
+					}
+
+					for (Iterator iterator3 = listTestScript.iterator(); iterator3
+							.hasNext();) {
+						TestScriptsDO testScriptsDO = (TestScriptsDO) iterator3
+								.next();
+						if (testScriptsDO.getTestScriptType().equals("Login")
+								&& object.getComponentName().equalsIgnoreCase(
+										"password")) {
+
+							String label = "Login";
+
+							String click = "\"" + label + "\"";
+							sb.append("\t\tdriver.findElement(By.id(" + click
+									+ ")).click();");
+							sb.append("\n");
+
+							String tsdLabel1 = "tsidLabel";
+							String tsdLabel = "\"" + tsdLabel1 + "\"";
+
+							String sales1 = "Sales";
+							String sales = "\"" + sales1 + "\"";
+
+							String accounts1 = "Accounts";
+							String accounts = "\"" + accounts1 + "\"";
+
+							String new1 = "new";
+							String new2 = "\"" + new1 + "\"";
+
+							sb.append("\t\tdriver.findElement(By.id("
+									+ tsdLabel + ")).click();");
+							sb.append("\n");
+							sb.append("\t\tdriver.findElement(By.linkText("
+									+ sales + ")).click();");
+							sb.append("\n");
+							sb.append("\t\tdriver.findElement(By.linkText("
+									+ accounts + ")).click();");
+							sb.append("\n");
+							sb.append("\t\tdriver.findElement(By.name(" + new2
+									+ ")).click();");
+							sb.append("\n");
+
+						}
+					}
+
+					if (actionType.equals("Text")
+							&& object.getComponentName().equalsIgnoreCase(
+									"Account Name")) {
+						String acc = "acc2";
+						String id = "\"" + acc + "\"";
+						String sendkeys = "\"" + object.getData() + "\"";
+
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).clear();");
+						sb.append("\n");
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).sendKeys(" + sendkeys + ");");
+						sb.append("\n");
+					}
+					if (actionType.equals("Text")
+							&& object.getComponentName().equalsIgnoreCase(
+									"Annual Revenue")) {
+						String acc = "acc8";
+						String id = "\"" + acc + "\"";
+						String sendkeys = "\"" + object.getData() + "\"";
+
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).clear();");
+						sb.append("\n");
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).sendKeys(" + sendkeys + ");");
+						sb.append("\n");
+					}
+					if (actionType.equals("Text")
+							&& object.getComponentName().equalsIgnoreCase(
+									"Employees")) {
+						String acc = "acc15";
+						String id = "\"" + acc + "\"";
+						String sendkeys = "\"" + object.getData() + "\"";
+
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).clear();");
+						sb.append("\n");
+						sb.append("\t\tdriver.findElement(By.id(" + id
+								+ ")).sendKeys(" + sendkeys + ");");
+						sb.append("\n");
+					}
+
+				}
+
+			}
+
+			String label = "save";
+
+			String click = "\"" + label + "\"";
+			sb.append("\t\tdriver.findElement(By.name(" + click + ")).click();");
+			sb.append("\n");
+		}
+
 		sb.append("\t}");
 		sb.append("\n");
 
